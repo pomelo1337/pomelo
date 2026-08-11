@@ -1,0 +1,193 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>我的持仓 · 操作建议</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'PingFang SC',sans-serif;background:#f5f6fa;color:#1f2733;padding:20px;max-width:760px;margin:auto}
+h1{font-size:22px;color:#111} .meta{color:#888;font-size:12px;margin:6px 0 18px}
+.card{background:#fff;border:1px solid #e7eaf0;border-radius:16px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px rgba(16,24,40,.05)}
+.etf .eh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.tag{background:#eef2ff;color:#4f46e5;font-size:12px;font-weight:600;padding:2px 8px;border-radius:5px;margin-right:6px}
+.stage{font-size:11px;padding:2px 8px;border-radius:999px;margin-left:6px}
+.stage.bull{background:#ecfdf5;color:#059669} .stage.bear{background:#fef2f2;color:#dc2626}
+.price .nprice{font-size:20px;font-weight:800;color:#111}
+.chg{font-size:13px;font-weight:600;margin-left:6px}
+.chg.up{color:#dc2626}.chg.dn{color:#059669}
+.emeta{display:flex;gap:18px;font-size:12px;color:#6b7280;margin-bottom:12px}
+.emeta b{color:#374151}
+.pts{background:#f8fafc;border-radius:10px;padding:12px;font-size:12px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px}
+.pts div span{display:block;color:#9ca3af;font-size:10px}.pts b{color:#334155;font-size:12px}
+.dn2{color:#dc2626}
+.qty{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.qty label{font-size:13px;color:#6b7280;flex-shrink:0}
+.qty input{flex:1;padding:10px;border:1.5px solid #dfe3ec;border-radius:10px;font-size:15px;outline:none}
+.qty input:focus{border-color:#7c3aed}
+.calc{display:flex;gap:18px;font-size:13px;color:#374151;background:#fff;border-top:1px solid #f0f2f7;padding-top:10px}
+.calc b{font-size:14px}
+.pos{color:#dc2626;font-weight:700}.neg{color:#059669;font-weight:700}
+.hdrshell{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px}
+.totalcard{display:flex;gap:24px;flex-wrap:wrap}
+.totalcard .ti{font-size:12px;color:#9ca3af}.totalcard .tv{font-size:20px;font-weight:800;color:#111}
+button.adv{background:#7c3aed;color:#fff;border:none;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:700;width:100%;cursor:pointer;transition:background .2s;margin-top:4px}
+button.adv:hover{background:#6d28d9}
+.advout{background:#fff8f0;border:1px solid #ffe0b2;border-radius:12px;padding:16px;margin-top:14px;font-size:14px;line-height:1.9;display:none}
+.advout.show{display:block}
+.advout h3{font-size:15px;color:#b45309;margin-bottom:8px}
+.op{padding:9px 12px;border-left:4px solid #7c3aed;background:#faf5ff;border-radius:6px;margin:8px 0}
+.op.se{border-left-color:#dc2626;background:#fef2f2}
+.op.bu{border-left-color:#059669;background:#ecfdf5}
+.wa{color:#6b7280;font-size:13px}
+.foot{text-align:center;color:#9ca3af;font-size:11px;margin-top:20px}
+</style></head><body>
+<h1>📂 我的持仓 · 操作建议</h1>
+<div class="meta">实时市场 2026-08-12 02:02:30 · 输入持仓数量后点下方按钮，生成抛/买建议 · 数据每5分钟刷新</div>
+<div class="card totalcard" id="totalcard" style="display:none">
+  <div><div class="ti">总持仓市值</div><div class="tv" id="tmv">-</div></div>
+  <div><div class="ti">总浮动盈亏</div><div class="tv" id="tpnl">-</div></div>
+  <div><div class="ti">组合浮盈率</div><div class="tv" id="tpct">-</div></div>
+</div>
+
+  <div class="etf" id="etf0">
+    <div class="eh">
+      <div>
+        <span class="tag">159558</span>
+        <b>半导体设备ETF·易方达</b>
+        <span class="stage bear">空头排列</span>
+      </div>
+      <div class="price">
+        <b class="nprice">1.159</b>
+        <span class="chg dn">-3.09%</span>
+      </div>
+    </div>
+    <div class="emeta">
+      <span>持仓成本 <b>1.155</b></span>
+      <span>风险指数 <b>37.6</b></span>
+      <span>风险收益比 <b>0.5391117198199955</b></span>
+    </div>
+    <div class="pts">
+      <div><span>买区</span><b>0.9129599999999999 ~ 0.951</b></div>
+      <div><span>卖区</span><b>1.1177499999999998</b></div>
+      <div><span>压力</span><b>1.1551666666666667</b></div>
+      <div><span>目标</span><b>1.29677</b></div>
+      <div><span>止损</span><b class="dn2">0.9034499999999999</b></div>
+    </div>
+    <div class="qty">
+      <label>持仓数量（份）</label>
+      <input type="number" id="qty0" placeholder="输入份数…" min="0" value="0">
+    </div>
+    <div class="calc">
+      <span>市值 <b id="mv0">-</b></span>
+      <span>浮动盈亏 <b id="pnl0">-</b></span>
+      <span>浮盈率 <b id="pnpct0">-</b></span>
+    </div>
+  </div>
+
+  <div class="etf" id="etf1">
+    <div class="eh">
+      <div>
+        <span class="tag">588110</span>
+        <b>科创成长ETF·广发</b>
+        <span class="stage bear">空头排列</span>
+      </div>
+      <div class="price">
+        <b class="nprice">0.614</b>
+        <span class="chg dn">-1.44%</span>
+      </div>
+    </div>
+    <div class="emeta">
+      <span>持仓成本 <b>0.536</b></span>
+      <span>风险指数 <b>39.7</b></span>
+      <span>风险收益比 <b>0.6075457020614543</b></span>
+    </div>
+    <div class="pts">
+      <div><span>买区</span><b>0.49056 ~ 0.511</b></div>
+      <div><span>卖区</span><b>0.599</b></div>
+      <div><span>压力</span><b>0.6920999999999999</b></div>
+      <div><span>目标</span><b>0.6920999999999999</b></div>
+      <div><span>止损</span><b class="dn2">0.48545</b></div>
+    </div>
+    <div class="qty">
+      <label>持仓数量（份）</label>
+      <input type="number" id="qty1" placeholder="输入份数…" min="0" value="0">
+    </div>
+    <div class="calc">
+      <span>市值 <b id="mv1">-</b></span>
+      <span>浮动盈亏 <b id="pnl1">-</b></span>
+      <span>浮盈率 <b id="pnpct1">-</b></span>
+    </div>
+  </div>
+
+<div class="hdrshell"><div class="meta" style="margin:0">基于量化点位自动生成的操作建议</div></div>
+<button class="adv" onclick="genAdvice()">💡 生成操作建议</button>
+<div class="advout" id="advout"></div>
+<script>
+const DATA=[{"code": "159558", "name": "半导体设备ETF·易方达", "cost": 1.155, "price": 1.159, "pct": -3.09, "stage": "空头排列", "risk": 37.6, "ma20": 1.1177499999999998, "ma60": 1.1551666666666667, "buylow": 0.9129599999999999, "buyhigh": 0.951, "sella": 1.1177499999999998, "res": 1.1551666666666667, "target": 1.29677, "stop": 0.9034499999999999, "rr": 0.5391117198199955}, {"code": "588110", "name": "科创成长ETF·广发", "cost": 0.536, "price": 0.614, "pct": -1.44, "stage": "空头排列", "risk": 39.7, "ma20": 0.599, "ma60": 0.6920999999999999, "buylow": 0.49056, "buyhigh": 0.511, "sella": 0.599, "res": 0.6920999999999999, "target": 0.6920999999999999, "stop": 0.48545, "rr": 0.6075457020614543}];
+window.onload = function() {
+  let s=null; try{s=JSON.parse(localStorage.getItem('hold_qty')||'{}')}catch(e){s={}}
+  for(let i=0;i<DATA.length;i++){ let el=document.getElementById('qty'+i); if(s[DATA[i].code]!==undefined) el.value=s[DATA[i].code]; calc(i); }
+  updateTotal();
+};
+function qty(i){ let v=parseFloat(document.getElementById('qty'+i).value); return isNaN(v)||v<0?0:v; }
+function calc(i){
+  let e=DATA[i], q=qty(i), price=e.price||0;
+  let divmv=document.getElementById('mv'+i), divp=document.getElementById('pnl'+i), divpp=document.getElementById('pnpct'+i);
+  let mv=q*price, cost=q*e.cost, pnl=mv-cost, pct=cost>0?(pnl/cost*100):0;
+  divmv.textContent=mv.toLocaleString()+' 元';
+  divp.textContent=(pnl>=0?'+':'')+pnl.toLocaleString(undefined,{maximumFractionDigits:0})+' 元';
+  divp.className=(pnl>=0?'pos':'neg');
+  divpp.textContent=(pct>=0?'+':'')+pct.toFixed(2)+'%';
+  divpp.className=(pnl>=0?'pos':'neg');
+}
+function updateTotal(){
+  let tmv=0,tcost=0; for(let i=0;i<DATA.length;i++){ let e=DATA[i],q=qty(i); tmv+=q*e.price; tcost+=q*e.cost; }
+  let tpnl=tmv-tcost, tpct=tcost>0?tpnl/tcost*100:0;
+  let card=document.getElementById('totalcard'); card.style.display='block';
+  document.getElementById('tmv').textContent=tmv.toLocaleString()+' 元';
+  document.getElementById('tpnl').textContent=(tpnl>=0?'+':'')+tpnl.toLocaleString(undefined,{maximumFractionDigits:0})+' 元';
+  document.getElementById('tpnl').className=(tpnl>=0?'pos':'neg');
+  document.getElementById('tpct').textContent=(tpct>=0?'+':'')+tpct.toFixed(2)+'%';
+  document.getElementById('tpct').className=(tpct>=0?'pos':'neg');
+}
+for(let i=0;i<DATA.length;i++){ document.getElementById('qty'+i).addEventListener('input',function(){ let s=localStorage.getItem('hold_qty')||'{}'; try{s=JSON.parse(s)}catch(e){s={}} s[DATA[i].code]=parseFloat(this.value)||0; localStorage.setItem('hold_qty',JSON.stringify(s)); calc(i); updateTotal(); }); }
+function fmt(x){ return isFinite(x)?Number(x).toFixed(3):'-'; }
+function money(x){ return isFinite(x)?Number(x).toLocaleString(undefined,{maximumFractionDigits:0}):'-'; }
+function genAdvice(){
+  let bm=document.getElementById('advout'); bm.classList.add('show');
+  let html='<h3>📋 操作建议</h3>';
+  DATA.forEach(function(e,i){
+    let q=qty(i);
+    if(q<=0){ html+='<div class="wa">· <b>'+e.name+'</b>：未输入持仓数量，跳过。</div>'; return; }
+    let price=e.price||0, cost=e.cost, buyhigh=e.buyhigh||0, buylow=e.buylow||0, sella=e.sella||0, stop=e.stop||0, target=e.target||0;
+    let stage=String(e.stage||''), mv=q*price, costv=q*cost, pnl=mv-costv, pct=costv>0?pnl/costv*100:0;
+    html+='<div style="margin-top:12px"><b style="font-size:15px">'+e.name+'</b> <span style="font-size:12px;color:#888">现价'+fmt(price)+' · 浮盈'+pct.toFixed(1)+'%</span></div>';
+    let adv=[];
+    let action=null;
+    if(stop>0 && price<=stop){
+      action='清仓';
+      adv.push('<div class="op se">🚨 <b>已跌破止损线 '+fmt(stop)+'</b>，建议<b>清仓止损</b>：卖光 '+money(q)+' 份（约 '+money(mv)+' 元），保住剩余本金。</div>');
+    }
+    else if(sella>0 && price>=sella){
+      action='减仓'; let ratio=0.6, sell=q*ratio;
+      adv.push('<div class="op se">🛑 现价触及<b>卖区 '+fmt(sella)+'</b>，建议<b>减仓 '+Math.round(ratio*100)+'%</b>：卖出 <b>'+money(sell)+' 份</b>（约 '+money(sell*price)+' 元）落袋为安。</div>');
+    }
+    else if(target>0 && price>=target){
+      action='部分止盈'; let ratio=0.3, sell=q*ratio;
+      adv.push('<div class="op se">💰 已到<b>目标位 '+fmt(target)+'</b>，可<b>部分止盈 '+Math.round(ratio*100)+'%</b>：卖出 <b>'+money(sell)+' 份</b>（'+money(sell*price)+' 元）锁定利润。</div>');
+    }
+    else if(buyhigh>0 && price>=buylow && price<=buyhigh){
+      action='低吸';
+      let add=Math.max(50, Math.round(mv*0.15/price/100)*100);
+      adv.push('<div class="op bu">🎯 现价进入<b>买入区 '+fmt(buylow)+'~'+fmt(buyhigh)+'</b>，机会区可<b>低吸加仓</b>：买入 <b>'+money(add)+' 份</b>（约 '+money(add*price)+' 元）。</div>');
+    }
+    if(!action){
+      let note = stage.indexOf('空头')>=0 ? '当前空头排列' : '当前多头排列';
+      adv.push('<div class="wa">🤔 <b>'+note+'</b>，现价未触发买/卖点，<b>暂观望</b>。回踩买区 '+fmt(buylow)+'~'+fmt(buyhigh)+' 可低吸，反弹卖区 '+fmt(sella)+' 可减仓。</div>');
+    }
+    html+=adv.join('');
+  });
+  html+='<div style="margin-top:14px;border-top:1px dashed #d6c9f0;padding-top:10px;font-size:13px;color:#6b7280">⚠️ 以上为该仓位基于量化点位的自动建议。实盘请结合资金、风险承受力与流动性二次确认。硬止损为纪律执行线，破位坚决执行。</div>';
+  bm.innerHTML=html;
+}
+</script>
+<div class="foot">POMELO 持仓管理 · 仅供研究参考，不构成投资建议 · 数据来源：腾讯公开行情</div>
+</body></html>
