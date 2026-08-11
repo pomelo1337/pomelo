@@ -65,7 +65,7 @@ button.adv:hover{background:#6d28d9}
       </div>
     </div>
     <div class="emeta">
-      <span>持仓成本 <b>1.16</b></span>
+      <span>现价 <b style="color:#7c3aed">1.16</b></span>
       <span>风险指数 <b>37.60</b></span>
       <span>风险收益比 <b>0.54</b></span>
     </div>
@@ -78,7 +78,9 @@ button.adv:hover{background:#6d28d9}
     </div>
     <div class="qty">
       <label>持仓数量（份）</label>
-      <input type="number" id="qty0" placeholder="输入份数…" min="0" value="0">
+      <input type="number" id="qty0" placeholder="如 4000" min="0" value="0">
+      <label>买入价（元）</label>
+      <input type="number" id="buy0" placeholder="如 1.155" min="0" step="0.001" value="1.155">
     </div>
     <div class="calc">
       <span>市值 <b id="mv0">-</b></span>
@@ -100,7 +102,7 @@ button.adv:hover{background:#6d28d9}
       </div>
     </div>
     <div class="emeta">
-      <span>持仓成本 <b>0.54</b></span>
+      <span>现价 <b style="color:#7c3aed">0.61</b></span>
       <span>风险指数 <b>39.70</b></span>
       <span>风险收益比 <b>0.61</b></span>
     </div>
@@ -113,7 +115,9 @@ button.adv:hover{background:#6d28d9}
     </div>
     <div class="qty">
       <label>持仓数量（份）</label>
-      <input type="number" id="qty1" placeholder="输入份数…" min="0" value="0">
+      <input type="number" id="qty1" placeholder="如 4000" min="0" value="0">
+      <label>买入价（元）</label>
+      <input type="number" id="buy1" placeholder="如 0.536" min="0" step="0.001" value="0.536">
     </div>
     <div class="calc">
       <span>市值 <b id="mv1">-</b></span>
@@ -130,7 +134,7 @@ button.adv:hover{background:#6d28d9}
 <button class="adv" onclick="genAdvice()">💡 生成操作建议</button>
 <div class="advout" id="advout"></div>
 <script>
-const DATA=[{"code": "159558", "name": "半导体设备ETF·易方达", "cost": 1.16, "price": 1.16, "pct": -3.09, "stage": "空头排列", "risk": 37.6, "ma20": 1.12, "ma60": 1.16, "buylow": 0.91, "buyhigh": 0.95, "sella": 1.12, "res": 1.16, "target": 1.3, "stop": 0.9, "rr": 0.54}, {"code": "588110", "name": "科创成长ETF·广发", "cost": 0.54, "price": 0.61, "pct": -1.44, "stage": "空头排列", "risk": 39.7, "ma20": 0.6, "ma60": 0.69, "buylow": 0.49, "buyhigh": 0.51, "sella": 0.6, "res": 0.69, "target": 0.69, "stop": 0.49, "rr": 0.61}];
+const DATA=[{"code": "159558", "name": "半导体设备ETF·易方达", "cost": 1.155, "price": 1.16, "pct": -3.09, "stage": "空头排列", "risk": 37.6, "ma20": 1.12, "ma60": 1.16, "buylow": 0.91, "buyhigh": 0.95, "sella": 1.12, "res": 1.16, "target": 1.3, "stop": 0.9, "rr": 0.54}, {"code": "588110", "name": "科创成长ETF·广发", "cost": 0.536, "price": 0.61, "pct": -1.44, "stage": "空头排列", "risk": 39.7, "ma20": 0.6, "ma60": 0.69, "buylow": 0.49, "buyhigh": 0.51, "sella": 0.6, "res": 0.69, "target": 0.69, "stop": 0.49, "rr": 0.61}];
 const RECO=[{"code": "512010", "name": "医药ETF易方达", "price": 0.403, "score": 74.6, "m60": 15.47277936962752, "m120": 5.22193211488251}, {"code": "512170", "name": "医疗ETF华宝", "price": 0.351, "score": 69.6, "m60": 9.006211180124213, "m120": -2.228412256267409}, {"code": "515950", "name": "医药50ETF富国", "price": 0.998, "score": 69.3, "m60": 14.449541284403677, "m120": 6.283280085197029}, {"code": "159992", "name": "创新药ETF银华", "price": 0.922, "score": 68.5, "m60": 17.602040816326525, "m120": 10.287081339712923}, {"code": "512690", "name": "酒ETF鹏华", "price": 0.441, "score": 67.5, "m60": -2.2172949002217335, "m120": -20.397111913357403}];
 const SLEEP1=false;
 window.onload = function() {
@@ -138,14 +142,19 @@ window.onload = function() {
   for(let i=0;i<DATA.length;i++){ let el=document.getElementById('qty'+i); if(s[DATA[i].code]!==undefined) el.value=s[DATA[i].code]; calc(i); }
   let ta=document.getElementById('totalAsset');
   if(ta){ let a=localStorage.getItem('hold_assets'); if(a&&!isNaN(parseFloat(a))) ta.value=parseFloat(a); }
+  // 回填买入价
+  let sb=null; try{sb=JSON.parse(localStorage.getItem('hold_buy')||'{}')}catch(e){sb={}}
+  for(let i=0;i<DATA.length;i++){ let ber=document.getElementById('buy'+i); if(sb&&sb[DATA[i].code]!==undefined&&sb[DATA[i].code]>0) ber.value=sb[DATA[i].code]; }
   updateTotal();
 };
 function qty(i){ let v=parseFloat(document.getElementById('qty'+i).value); return isNaN(v)||v<0?0:v; }
 function totalAssets(){ let v=parseFloat(document.getElementById('totalAsset').value); return isNaN(v)||v<0?0:v; }
+function buyprice(i){ let v=parseFloat(document.getElementById('buy'+i).value); let b=isNaN(v)||v<0?0:v; return b||DATA[i].cost||0; }
 function calc(i){
   let e=DATA[i], q=qty(i), price=e.price||0;
+  let buy=buyprice(i);
   let divmv=document.getElementById('mv'+i), divp=document.getElementById('pnl'+i), divpp=document.getElementById('pnpct'+i);
-  let mv=q*price, cost=q*e.cost, pnl=mv-cost, pct=cost>0?(pnl/cost*100):0;
+  let mv=q*price, cost=q*buy, pnl=mv-cost, pct=cost>0?(pnl/cost*100):0;
   divmv.textContent=mv.toLocaleString()+' 元';
   divp.textContent=(pnl>=0?'+':'')+pnl.toLocaleString(undefined,{maximumFractionDigits:0})+' 元';
   divp.className=(pnl>=0?'pos':'neg');
@@ -153,7 +162,7 @@ function calc(i){
   divpp.className=(pnl>=0?'pos':'neg');
 }
 function updateTotal(){
-  let tmv=0,tcost=0; for(let i=0;i<DATA.length;i++){ let e=DATA[i],q=qty(i); tmv+=q*e.price; tcost+=q*e.cost; }
+  let tmv=0,tcost=0; for(let i=0;i<DATA.length;i++){ let e=DATA[i],q=qty(i); tmv+=q*e.price; tcost+=q*buyprice(i); }
   let tpnl=tmv-tcost, tpct=tcost>0?tpnl/tcost*100:0;
   let card=document.getElementById('totalcard'); card.style.display='block';
   document.getElementById('tmv').textContent=tmv.toLocaleString()+' 元';
@@ -164,6 +173,7 @@ function updateTotal(){
 }
 for(let i=0;i<DATA.length;i++){ document.getElementById('qty'+i).addEventListener('input',function(){ let s=localStorage.getItem('hold_qty')||'{}'; try{s=JSON.parse(s)}catch(e){s={}} s[DATA[i].code]=parseFloat(this.value)||0; localStorage.setItem('hold_qty',JSON.stringify(s)); calc(i); updateTotal(); }); }
 (function(){ var ta2=document.getElementById('totalAsset'); if(ta2) ta2.addEventListener('input',function(){ var v=parseFloat(this.value); if(!isNaN(v)&&v>=0) localStorage.setItem('hold_assets',this.value); }); })();
+for(let i=0;i<DATA.length;i++){ document.getElementById('buy'+i).addEventListener('input',function(){ let s=localStorage.getItem('hold_buy')||'{}'; try{s=JSON.parse(s)}catch(e){s={}} s[DATA[i].code]=parseFloat(this.value)||0; localStorage.setItem('hold_buy',JSON.stringify(s)); calc(i); updateTotal(); }); }
 function fmt(x){ return isFinite(x)?Number(x).toFixed(2):'-'; }
 function money(x){ return isFinite(x)?Number(x).toLocaleString(undefined,{maximumFractionDigits:0}):'-'; }
 function genAdvice(){
@@ -175,25 +185,26 @@ function genAdvice(){
   DATA.forEach(function(e,i){
     let q=qty(i);
     if(q<=0){ sell_html+='<div class="wa">· <b>'+e.name+'</b> 未输入持仓数量，跳过。</div>'; return; }
-    let price=e.price||0, cost=e.cost, buyhigh=e.buyhigh||0, buylow=e.buylow||0, sella=e.sella||0, stop=e.stop||0, target=e.target||0;
+    let price=e.price||0, cost=buyprice(i), buyhigh=e.buyhigh||0, buylow=e.buylow||0, sella=e.sella||0, stop=e.stop||0, target=e.target||0;
     let stage=String(e.stage||''), mv=q*price, costv=q*cost, pnl=mv-costv, pct=costv>0?pnl/costv*100:0;
+    let pnlnote = pct>=0 ? '<b style="color:#16a34a">盈+'+pct.toFixed(1)+'%</b>' : '<b style="color:#dc2626">亏'+pct.toFixed(1)+'%</b>';
 
     // --- 卖出分支 (优先级: 止损 > 卖区 > 目标位止盈) ---
     let sold=null;
     if(stop>0 && price<=stop){
       sold='清仓止损';
       let amt=q*price; sellTotal+=amt; sellHas=true;
-      sell_html+='<div class="op se">🚨 <b>'+e.name+'</b> 现价 '+fmt(price)+' 已<b>跌破止损线 '+fmt(stop)+'</b>。<br>　<b>卖：全部 '+money(q)+' 份</b>（约 '+money(amt)+' 元），坚决离场保本。</div>';
+      sell_html+='<div class="op se">🚨 <b>'+e.name+'</b> 现价 '+fmt(price)+' 已<b>跌破止损线 '+fmt(stop)+'</b>（买入价'+fmt(cost)+'，'+pnlnote+'）。<br>　<b>卖：全部 '+money(q)+' 份</b>（约 '+money(amt)+' 元），坚决离场保本。</div>';
     } else if(sella>0 && price>=sella){
       sold='减仓'; let ratio=0.6, sell=Math.round(q*ratio), amt=sell*price; sellTotal+=amt; sellHas=true;
-      sell_html+='<div class="op se">🛑 <b>'+e.name+'</b> 现价 '+fmt(price)+' 触及<b>卖区 '+fmt(sella)+'</b>（'+stage+'），建议落袋。<br>　<b>卖：'+Math.round(ratio*100)+'% 即 '+money(sell)+' 份</b>（约 '+money(amt)+' 元）。</div>';
+      sell_html+='<div class="op se">🛑 <b>'+e.name+'</b> 现价 '+fmt(price)+' 触及<b>卖区 '+fmt(sella)+'</b>（'+stage+' · 买入价'+fmt(cost)+'，'+pnlnote+'），建议落袋。<br>　<b>卖：'+Math.round(ratio*100)+'% 即 '+money(sell)+' 份</b>（约 '+money(amt)+' 元）。</div>';
     } else if(target>0 && price>=target){
       sold='止盈'; let ratio=0.3, sell=Math.round(q*ratio), amt=sell*price; sellTotal+=amt; sellHas=true;
       sell_html+='<div class="op se">💰 <b>'+e.name+'</b> 已达<b>目标位 '+fmt(target)+'</b>，建议部分止盈。<br>　<b>卖：'+Math.round(ratio*100)+'% 即 '+money(sell)+' 份</b>（约 '+money(amt)+' 元），先锁一批利润。</div>';
     }
     if(!sold){
       let note = stage.indexOf('空头')>=0 ? '空头排列' : '多头排列';
-      sell_html+='<div class="wa">🤔 <b>'+e.name+'</b>（'+note+'）当前未触发卖点，<b>暂无卖出动作</b>。</div>';
+      sell_html+='<div class="wa">🤔 <b>'+e.name+'</b>（'+note+' · 买入价'+fmt(cost)+'，'+pnlnote+'）当前未触发卖点，<b>暂无卖出动作</b>。</div>';
     }
   });
   if(!sellHas){ sell_html+='<div class="wa">✅ 当前均<strong>未触发卖出信号</strong>，无强制减仓/止损需求。</div>'; } else {
