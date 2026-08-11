@@ -34,7 +34,8 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .section-title{font-size:21px;font-weight:800;color:#111827;margin:30px 0 8px}
 .section-title span{color:#94a3b8;font-size:13px;font-weight:400}
 .recgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
-.rec{background:#fff;border:1px solid #e8ecf2;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(16,24,40,.05)}
+.rec{background:#fff;border:1px solid #e8ecf2;border-radius:14px;padding:16px;box-shadow:0 1px 6px rgba(16,24,40,.05);text-decoration:none;color:inherit;display:block;transition:transform .15s,box-shadow .15s;cursor:pointer}
+.rec:hover{transform:translateY(-2px);box-shadow:0 6px 18px rgba(16,24,40,.1);border-color:#c7d2fe}
 .rectop{display:flex;justify-content:space-between;align-items:center;gap:6px}
 .oplevel{font-size:12px;font-weight:700;padding:2px 8px;border-radius:8px;white-space:nowrap}
 .recstat{display:flex;justify-content:space-between;font-size:13px;color:#475569;margin:10px 0}
@@ -42,12 +43,25 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 .recmom div span{display:block;font-size:10px;color:#94a3b8}
 .recmom div b{font-size:15px}
 .foot{text-align:center;color:#94a3b8;font-size:11px;margin-top:26px}
+.searcher{position:relative;max-width:480px;margin:16px auto 0}
+.searcher input{width:100%;padding:13px 18px;border-radius:14px;border:2px solid #e2e8f0;font-size:15px;outline:none;background:#fff;box-shadow:0 2px 8px rgba(16,24,40,.05);transition:border-color .2s}
+.searcher input:focus{border-color:#8b5cf6}
+.sresult{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #e8ecf2;border-radius:12px;margin-top:6px;box-shadow:0 8px 24px rgba(16,24,40,.12);z-index:50;max-height:340px;overflow-y:auto;text-align:left;display:none}
+.sresult a{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid #f1f5f9;text-decoration:none;color:#1f2733;font-size:14px}
+.sresult a:hover{background:#f5f3ff}
+.sresult .code{color:#94a3b8;font-size:12px}
+.sresult .sc{font-weight:700}
+.sresult .empty{padding:14px 16px;color:#94a3b8;font-size:13px}
 .note{background:#fffdf5;border:1px solid #fde68a;padding:14px 16px;border-radius:10px;font-size:12px;color:#92600a;line-height:1.7;margin-top:20px}
 </style></head><body>
 <div class="cover">
   <h1>📊 投资面板</h1>
   <div class="sub">不用懂专业术语 · 直接告诉你该怎么做</div>
   <div class="pill">🔄 开盘每5分钟自动更新 · 最后更新 2026-08-12 02:02:30</div>
+  <div class="searcher">
+    <input id="etfSearch" type="text" placeholder="🔍 搜ETF，如：医药 / 510300 / 半导体…" autocomplete="off">
+    <div id="searchResult" class="sresult"></div>
+  </div>
 </div>
 <div class="wrap">
   <div class="section-title">💼 我的持仓 <span>怎么看？看左边的大标签就知道此刻该买/卖/拿</span></div>
@@ -118,7 +132,7 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
 </div>
   <div class="section-title">🎯 量化发现的机会 <span>模型筛出的潜力ETF, 星星越多越值得关注</span></div>
   <div class="recgrid">
-<div class="rec">
+<a class="rec" href="etf/512010.html">
   <div class="rectop"><div><span class="tag">512010</span> <b>医药ETF</b></div>
     <span class="oplevel" style="color:#059669;background:#ecfdf5">⭐ 高机会</span></div>
   <div class="recstat">
@@ -130,9 +144,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="up">+15.5%</b></div>
     <div><span>评分</span><b style="color:#059669">74.6分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/512170.html">
   <div class="rectop"><div><span class="tag">512170</span> <b>医疗ETF</b></div>
     <span class="oplevel" style="color:#ca8a04;background:#fef3c7">🔔 值得关注</span></div>
   <div class="recstat">
@@ -144,9 +158,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="up">+9.0%</b></div>
     <div><span>评分</span><b style="color:#ca8a04">69.6分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/512690.html">
   <div class="rectop"><div><span class="tag">512690</span> <b>白酒ETF</b></div>
     <span class="oplevel" style="color:#ca8a04;background:#fef3c7">🔔 值得关注</span></div>
   <div class="recstat">
@@ -158,9 +172,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="dn">-2.2%</b></div>
     <div><span>评分</span><b style="color:#ca8a04">67.5分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/159929.html">
   <div class="rectop"><div><span class="tag">159929</span> <b>医药ETF</b></div>
     <span class="oplevel" style="color:#ca8a04;background:#fef3c7">🔔 值得关注</span></div>
   <div class="recstat">
@@ -172,9 +186,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="up">+11.4%</b></div>
     <div><span>评分</span><b style="color:#ca8a04">66.5分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">已进入上升通道,动能较强,可关注回调机会 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/515180.html">
   <div class="rectop"><div><span class="tag">515180</span> <b>红利ETF</b></div>
     <span class="oplevel" style="color:#ca8a04;background:#fef3c7">🔔 值得关注</span></div>
   <div class="recstat">
@@ -186,9 +200,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="up">+0.4%</b></div>
     <div><span>评分</span><b style="color:#ca8a04">56.2分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">趋势中性,等待明确方向再动</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">趋势中性,等待明确方向再动 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/512400.html">
   <div class="rectop"><div><span class="tag">512400</span> <b>有色金属ETF</b></div>
     <span class="oplevel" style="color:#9ca3af;background:#f3f4f6">🗂 观察中</span></div>
   <div class="recstat">
@@ -200,9 +214,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="dn">-4.3%</b></div>
     <div><span>评分</span><b style="color:#9ca3af">44.7分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/512480.html">
   <div class="rectop"><div><span class="tag">512480</span> <b>半导体ETF</b></div>
     <span class="oplevel" style="color:#94a3b8;background:#f1f5f9">📉 暂观望</span></div>
   <div class="recstat">
@@ -214,9 +228,9 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="up">+4.0%</b></div>
     <div><span>评分</span><b style="color:#94a3b8">39.6分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望</div>
-</div>
-<div class="rec">
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a>
+<a class="rec" href="etf/515030.html">
   <div class="rectop"><div><span class="tag">515030</span> <b>新能源汽车ETF</b></div>
     <span class="oplevel" style="color:#94a3b8;background:#f1f5f9">📉 暂观望</span></div>
   <div class="recstat">
@@ -228,12 +242,38 @@ body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;backgr
     <div><span>近3月</span><b class="dn">-18.0%</b></div>
     <div><span>评分</span><b style="color:#94a3b8">32.4分</b></div>
   </div>
-  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望</div>
-</div></div>
+  <div class="recdesc" style="font-size:11px;color:#9ca3af">当前承压,建议观望 · <b style="color:#4f46e5">点我看详情 →</b></div>
+</a></div>
   <div class="note"><b>怎么看这个页面？</b><br>
     ① <b>持仓区</b>：每只ETF顶部的大色块标签（🟢/🟡/🟠/🔴）直接告诉你"此刻该买、拿还是卖"，下面有白话解释。<br>
     ② <b>关键价位</b>：🛒买点 / 💰卖点 / 🛑止损线 三个价位，就按这个买卖，简单直接。<br>
     ③ <b>量化机会</b>：评分高的ETF（⭐）代表模型觉得势头好、值得关注，但不是一定涨。</div>
-  <div class="foot">POMELO · 投资面板 · 生成于 2026-08-12 02:18:09 · 仅供研究参考,不构成投资建议</div>
+  <div class="foot">POMELO · 投资面板 · 生成于 2026-08-12 02:25:19 · 仅供研究参考,不构成投资建议</div>
 </div>
+<script>
+const ETF_LIST = JSON.parse('[{"code": "512010", "name": "医药ETF", "score": 74.6, "bang": "医药", "file": "etf/512010.html"}, {"code": "512170", "name": "医疗ETF", "score": 69.6, "bang": "医药", "file": "etf/512170.html"}, {"code": "515950", "name": "医药龙头ETF", "score": 69.3, "bang": "医药", "file": "etf/515950.html"}, {"code": "159992", "name": "创新药ETF", "score": 68.5, "bang": "医药", "file": "etf/159992.html"}, {"code": "512690", "name": "白酒ETF", "score": 67.5, "bang": "消费", "file": "etf/512690.html"}, {"code": "159938", "name": "医药卫生ETF", "score": 66.7, "bang": "医药", "file": "etf/159938.html"}, {"code": "159929", "name": "医药ETF", "score": 66.5, "bang": "医药", "file": "etf/159929.html"}, {"code": "515650", "name": "消费50ETF", "score": 61.9, "bang": "消费", "file": "etf/515650.html"}, {"code": "159928", "name": "消费ETF", "score": 60.8, "bang": "消费", "file": "etf/159928.html"}, {"code": "510880", "name": "红利ETF", "score": 59.9, "bang": "红利", "file": "etf/510880.html"}, {"code": "515180", "name": "红利ETF", "score": 56.2, "bang": "红利", "file": "etf/515180.html"}, {"code": "159905", "name": "深红利ETF", "score": 55.9, "bang": "红利", "file": "etf/159905.html"}, {"code": "512980", "name": "传媒ETF", "score": 49.5, "bang": "娱乐", "file": "etf/512980.html"}, {"code": "510710", "name": "上证50ETF", "score": 48.1, "bang": "宽基", "file": "etf/510710.html"}, {"code": "510050", "name": "上证50ETF", "score": 47.6, "bang": "宽基", "file": "etf/510050.html"}, {"code": "515230", "name": "软件ETF", "score": 47.1, "bang": "科技", "file": "etf/515230.html"}, {"code": "512400", "name": "有色金属ETF", "score": 44.7, "bang": "周期", "file": "etf/512400.html"}, {"code": "159852", "name": "软件ETF", "score": 43.6, "bang": "科技", "file": "etf/159852.html"}, {"code": "518880", "name": "黄金ETF", "score": 43.2, "bang": "避险", "file": "etf/518880.html"}, {"code": "159869", "name": "传媒ETF", "score": 42.7, "bang": "娱乐", "file": "etf/159869.html"}, {"code": "515860", "name": "科技100ETF", "score": 41.1, "bang": "科技", "file": "etf/515860.html"}, {"code": "159766", "name": "旅游ETF", "score": 40.6, "bang": "消费", "file": "etf/159766.html"}, {"code": "512480", "name": "半导体ETF", "score": 39.6, "bang": "科技", "file": "etf/512480.html"}, {"code": "515000", "name": "科技ETF", "score": 36.7, "bang": "科技", "file": "etf/515000.html"}, {"code": "512580", "name": "环保ETF", "score": 35.2, "bang": "新能源", "file": "etf/512580.html"}, {"code": "515030", "name": "新能源汽车ETF", "score": 32.4, "bang": "新能源", "file": "etf/515030.html"}, {"code": "515790", "name": "光伏ETF", "score": 30.7, "bang": "新能源", "file": "etf/515790.html"}, {"code": "159901", "name": "深证100ETF", "score": 30.2, "bang": "宽基", "file": "etf/159901.html"}, {"code": "159915", "name": "创业板ETF", "score": 30.1, "bang": "成长", "file": "etf/159915.html"}, {"code": "512520", "name": "军工ETF", "score": 29.5, "bang": "军工", "file": "etf/512520.html"}, {"code": "512720", "name": "计算机ETF", "score": 29.5, "bang": "科技", "file": "etf/512720.html"}, {"code": "159925", "name": "消费ETF", "score": 29.4, "bang": "消费", "file": "etf/159925.html"}, {"code": "510300", "name": "沪深300ETF", "score": 29.1, "bang": "宽基", "file": "etf/510300.html"}, {"code": "159820", "name": "中证500ETF", "score": 29.0, "bang": "宽基", "file": "etf/159820.html"}, {"code": "510500", "name": "中证500ETF", "score": 28.9, "bang": "宽基", "file": "etf/510500.html"}, {"code": "512100", "name": "中证1000ETF", "score": 28.6, "bang": "宽基", "file": "etf/512100.html"}, {"code": "512660", "name": "军工ETF", "score": 28.3, "bang": "军工", "file": "etf/512660.html"}, {"code": "512760", "name": "芯片ETF", "score": 25.9, "bang": "科技", "file": "etf/512760.html"}, {"code": "512800", "name": "银行ETF", "score": 24.2, "bang": "金融", "file": "etf/512800.html"}, {"code": "515050", "name": "5GETF", "score": 23.5, "bang": "科技", "file": "etf/515050.html"}, {"code": "159995", "name": "半导体ETF", "score": 23.3, "bang": "科技", "file": "etf/159995.html"}, {"code": "588000", "name": "科创50ETF", "score": 21.4, "bang": "科技", "file": "etf/588000.html"}, {"code": "515880", "name": "通信ETF", "score": 20.2, "bang": "科技", "file": "etf/515880.html"}, {"code": "512000", "name": "券商ETF", "score": 20.1, "bang": "金融", "file": "etf/512000.html"}, {"code": "512880", "name": "证券ETF", "score": 20.1, "bang": "金融", "file": "etf/512880.html"}, {"code": "159949", "name": "创业板50ETF", "score": 17.1, "bang": "成长", "file": "etf/159949.html"}, {"code": "159986", "name": "芯片ETF", "score": 15.8, "bang": "科技", "file": "etf/159986.html"}]' === '[]' ? '[]' : '[{"code": "512010", "name": "医药ETF", "score": 74.6, "bang": "医药", "file": "etf/512010.html"}, {"code": "512170", "name": "医疗ETF", "score": 69.6, "bang": "医药", "file": "etf/512170.html"}, {"code": "515950", "name": "医药龙头ETF", "score": 69.3, "bang": "医药", "file": "etf/515950.html"}, {"code": "159992", "name": "创新药ETF", "score": 68.5, "bang": "医药", "file": "etf/159992.html"}, {"code": "512690", "name": "白酒ETF", "score": 67.5, "bang": "消费", "file": "etf/512690.html"}, {"code": "159938", "name": "医药卫生ETF", "score": 66.7, "bang": "医药", "file": "etf/159938.html"}, {"code": "159929", "name": "医药ETF", "score": 66.5, "bang": "医药", "file": "etf/159929.html"}, {"code": "515650", "name": "消费50ETF", "score": 61.9, "bang": "消费", "file": "etf/515650.html"}, {"code": "159928", "name": "消费ETF", "score": 60.8, "bang": "消费", "file": "etf/159928.html"}, {"code": "510880", "name": "红利ETF", "score": 59.9, "bang": "红利", "file": "etf/510880.html"}, {"code": "515180", "name": "红利ETF", "score": 56.2, "bang": "红利", "file": "etf/515180.html"}, {"code": "159905", "name": "深红利ETF", "score": 55.9, "bang": "红利", "file": "etf/159905.html"}, {"code": "512980", "name": "传媒ETF", "score": 49.5, "bang": "娱乐", "file": "etf/512980.html"}, {"code": "510710", "name": "上证50ETF", "score": 48.1, "bang": "宽基", "file": "etf/510710.html"}, {"code": "510050", "name": "上证50ETF", "score": 47.6, "bang": "宽基", "file": "etf/510050.html"}, {"code": "515230", "name": "软件ETF", "score": 47.1, "bang": "科技", "file": "etf/515230.html"}, {"code": "512400", "name": "有色金属ETF", "score": 44.7, "bang": "周期", "file": "etf/512400.html"}, {"code": "159852", "name": "软件ETF", "score": 43.6, "bang": "科技", "file": "etf/159852.html"}, {"code": "518880", "name": "黄金ETF", "score": 43.2, "bang": "避险", "file": "etf/518880.html"}, {"code": "159869", "name": "传媒ETF", "score": 42.7, "bang": "娱乐", "file": "etf/159869.html"}, {"code": "515860", "name": "科技100ETF", "score": 41.1, "bang": "科技", "file": "etf/515860.html"}, {"code": "159766", "name": "旅游ETF", "score": 40.6, "bang": "消费", "file": "etf/159766.html"}, {"code": "512480", "name": "半导体ETF", "score": 39.6, "bang": "科技", "file": "etf/512480.html"}, {"code": "515000", "name": "科技ETF", "score": 36.7, "bang": "科技", "file": "etf/515000.html"}, {"code": "512580", "name": "环保ETF", "score": 35.2, "bang": "新能源", "file": "etf/512580.html"}, {"code": "515030", "name": "新能源汽车ETF", "score": 32.4, "bang": "新能源", "file": "etf/515030.html"}, {"code": "515790", "name": "光伏ETF", "score": 30.7, "bang": "新能源", "file": "etf/515790.html"}, {"code": "159901", "name": "深证100ETF", "score": 30.2, "bang": "宽基", "file": "etf/159901.html"}, {"code": "159915", "name": "创业板ETF", "score": 30.1, "bang": "成长", "file": "etf/159915.html"}, {"code": "512520", "name": "军工ETF", "score": 29.5, "bang": "军工", "file": "etf/512520.html"}, {"code": "512720", "name": "计算机ETF", "score": 29.5, "bang": "科技", "file": "etf/512720.html"}, {"code": "159925", "name": "消费ETF", "score": 29.4, "bang": "消费", "file": "etf/159925.html"}, {"code": "510300", "name": "沪深300ETF", "score": 29.1, "bang": "宽基", "file": "etf/510300.html"}, {"code": "159820", "name": "中证500ETF", "score": 29.0, "bang": "宽基", "file": "etf/159820.html"}, {"code": "510500", "name": "中证500ETF", "score": 28.9, "bang": "宽基", "file": "etf/510500.html"}, {"code": "512100", "name": "中证1000ETF", "score": 28.6, "bang": "宽基", "file": "etf/512100.html"}, {"code": "512660", "name": "军工ETF", "score": 28.3, "bang": "军工", "file": "etf/512660.html"}, {"code": "512760", "name": "芯片ETF", "score": 25.9, "bang": "科技", "file": "etf/512760.html"}, {"code": "512800", "name": "银行ETF", "score": 24.2, "bang": "金融", "file": "etf/512800.html"}, {"code": "515050", "name": "5GETF", "score": 23.5, "bang": "科技", "file": "etf/515050.html"}, {"code": "159995", "name": "半导体ETF", "score": 23.3, "bang": "科技", "file": "etf/159995.html"}, {"code": "588000", "name": "科创50ETF", "score": 21.4, "bang": "科技", "file": "etf/588000.html"}, {"code": "515880", "name": "通信ETF", "score": 20.2, "bang": "科技", "file": "etf/515880.html"}, {"code": "512000", "name": "券商ETF", "score": 20.1, "bang": "金融", "file": "etf/512000.html"}, {"code": "512880", "name": "证券ETF", "score": 20.1, "bang": "金融", "file": "etf/512880.html"}, {"code": "159949", "name": "创业板50ETF", "score": 17.1, "bang": "成长", "file": "etf/159949.html"}, {"code": "159986", "name": "芯片ETF", "score": 15.8, "bang": "科技", "file": "etf/159986.html"}]');
+const inp = document.getElementById('etfSearch');
+const box = document.getElementById('searchResult');
+if (inp) {
+  inp.addEventListener('input', () => {
+    const kw = inp.value.trim().toLowerCase();
+    if (!kw) { box.style.display='none'; return; }
+    const hits = ETF_LIST.filter(e => e.name.toLowerCase().includes(kw) || e.code.includes(kw)).slice(0,8);
+    box.innerHTML = '';
+    if (!hits.length) {
+      box.innerHTML = '<div class="empty">未找到「'+inp.value+'」的ETF。可以试试 医药/半导体/510300 等，或稍后补充。</div>';
+    } else {
+      hits.forEach(e => {
+        const a = document.createElement('a');
+        a.setAttribute('href', e.file);
+        a.innerHTML = '<span>'+e.name+' <span class="code">'+e.code+'</span></span><span class="sc">'+e.score+'分</span>';
+        box.appendChild(a);
+      });
+    }
+    box.style.display = 'block';
+  });
+  inp.addEventListener('blur', () => setTimeout(()=>box.style.display='none',200));
+  inp.addEventListener('focus', () => { if (inp.value.trim()) inp.dispatchEvent(new Event('input')); });
+}
+</script>
 </body></html>
