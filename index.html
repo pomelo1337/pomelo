@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>POMELO · 量化投资研究站</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f8fa;color:#1f2733;-webkit-font-smoothing:antialiased}
+.hero{background:linear-gradient(160deg,#ffffff,#f8fafc);border-bottom:1px solid #eef0f4;padding:64px 24px 48px;text-align:center}
+.hero h1{font-size:44px;font-weight:800;letter-spacing:8px;color:#111827}
+.hero .sub{color:#6b7280;font-size:15px;letter-spacing:4px;margin-top:12px;font-weight:500}
+.hero .live{display:inline-flex;align-items:center;gap:6px;margin-top:16px;background:#ecfdf5;border:1px solid #a7f3d0;color:#059669;padding:5px 14px;border-radius:999px;font-size:12px}
+.hero .live::before{content:'';width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.18);animation:pulse 1.6s infinite}
+@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+.wrap{max-width:980px;margin:32px auto 0;padding:0 20px 64px}
+.sec-t{font-size:15px;color:#374151;font-weight:700;margin:32px 0 14px;display:flex;align-items:center;gap:8px}
+.sec-t::before{content:'';width:4px;height:15px;border-radius:2px;background:#7c3aed}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.report{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(16,24,40,.04);cursor:pointer;transition:transform .15s, box-shadow .2s;text-decoration:none;color:inherit;display:block}
+.report:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(16,24,40,.09)}
+.report .tag{display:inline-block;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;margin-bottom:10px}
+.report h3{font-size:16px;color:#111827;margin-bottom:6px}
+.report p{font-size:12px;color:#6b7280;line-height:1.6}
+.report .arrow{color:#7c3aed;font-size:13px;margin-top:8px;display:inline-block}
+.report.featured{border:2px solid #7c3aed;background:linear-gradient(180deg,#faf8ff,#fff)}
+.report.featured .tag{background:#7c3aed;color:#fff}
+.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
+.stat .box{background:#fff;border:1px solid #eceef2;border-radius:12px;padding:16px;text-align:center}
+.stat .n{font-size:24px;font-weight:800}
+.note{background:#fffdf5;border:1px solid #fdeeb8;border-radius:12px;padding:16px 20px;margin-top:40px;font-size:12px;color:#92600a;line-height:1.8}
+.foot{text-align:center;color:#9ca3af;font-size:11px;margin-top:36px}
+</style></head><body>
+<div class="hero">
+  <h1>POMELO</h1>
+  <div class="sub">量化投资研究站</div>
+  <div class="live">实时数据 · 量化分析 · ETF深度诊断</div>
+</div>
+<div class="wrap">
+  <div class="stat">
+    <div class="box"><div style="font-size:12px;color:#9ca3af">分析标的</div><div class="n" style="color:#7c3aed">2</div><div style="font-size:11px;color:#9ca3af">持仓ETF</div></div>
+    <div class="box"><div style="font-size:12px;color:#9ca3af">历史数据</div><div class="n" style="color:#16a34a">400日</div><div style="font-size:11px;color:#9ca3af">前复权K线</div></div>
+    <div class="box"><div style="font-size:12px;color:#9ca3af">研究框架</div><div class="n" style="font-size:19px;color:#111827">统计×因子×测</div><div style="font-size:11px;color:#9ca3af">多策略×风险</div></div>
+    <div class="box"><div style="font-size:12px;color:#9ca3af">刷新频率</div><div class="n" style="color:#d97706">5分钟</div><div style="font-size:11px;color:#9ca3af">实时变动</div></div>
+  </div>
+
+  <div class="sec-t">📈 研究报告</div>
+  <div class="grid">
+    <a class="report featured" href="reports/pomelo.html">
+      <span class="tag">最新 · 推荐</span>
+      <h3>POMELO 实时量化分析报告</h3>
+      <p>风险指数仪表盘 + 实时K线图 + 量化买卖点位 + 持仓策略建议 + 分价位操作纪律 + 多策略回测，全维度诊断两只持仓ETF。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+    <a class="report" href="reports/quant-analysis.html">
+      <span class="tag">深度研究</span>
+      <h3>梁文锋式量化深度分析</h3>
+      <p>统计画像、因子挖掘、风险建模、多策略回测，历史验证最优策略。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+    <a class="report" href="reports/selection.html">
+      <span class="tag">模型输出</span>
+      <h3>多因子选股报告</h3>
+      <p>动量+强弱+PE/PB多因子综合排名，输出候选池。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+    <a class="report" href="reports/backtest-ma10.html">
+      <span class="tag">策略回测</span>
+      <h3>双均线Top10回测</h3>
+      <p>多因子Top10组合的双均线择时回测，对比沪深300。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+    <a class="report" href="reports/backtest-ma8.html">
+      <span class="tag">策略回测</span>
+      <h3>双均线Top8回测</h3>
+      <p>Top8组合的双均线策略，夏普与超额收益分析。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+    <a class="report" href="reports/etf-technical.html">
+      <span class="tag">技术分析</span>
+      <h3>ETF技术面速览</h3>
+      <p>持仓ETF现价、盈亏、双均线多头信号速览。</p>
+      <span class="arrow">查看 →</span>
+    </a>
+  </div>
+
+  <div class="note">
+    <b>⚠️ 免责声明</b><br>
+    POMELO 量化研究站由算法基于历史公开数据自动生成（已考虑万分之0.5交易成本），仅供研究参考，不构成任何投资建议或收益承诺。历史表现不代表未来收益，投资有风险，入市需谨慎。
+  </div>
+  <div class="foot">POMELO · 量化投资研究站 · 数据来源：腾讯证券公开行情</div>
+</div>
+</body></html>
