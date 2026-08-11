@@ -5,14 +5,14 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f8fa;color:#1f2733;-webkit-font-smoothing:antialiased}
-.hero{background:linear-gradient(160deg,#111827,#1f2937);padding:48px 24px 40px;text-align:center;color:#fff}
+.hero{background:linear-gradient(160deg,#111827,#1f2937);padding:48px 24px 30px;text-align:center;color:#fff}
 .hero h1{font-size:38px;font-weight:800;letter-spacing:8px}
 .hero .sub{color:#9ca3af;font-size:13px;letter-spacing:3px;margin-top:10px}
-.wrap{max-width:920px;margin:28px auto 0;padding:0 20px 64px}
+.wrap{max-width:980px;margin:26px auto 0;padding:0 20px 64px}
 .sec-t{font-size:15px;color:#374151;font-weight:700;margin:30px 0 14px;display:flex;align-items:center;gap:8px}
 .sec-t::before{content:'';width:4px;height:15px;border-radius:2px;background:#7c3aed}
 .holds{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
-.hold{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+.hold{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(16,24,40,.05);position:relative}
 .hold .h-name{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
 .hold .h-name b{font-size:14px}
 .hold .h-code{color:#9ca3af;font-size:11px}
@@ -22,10 +22,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 .hold .h-row2{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:11px;color:#6b7280;flex-wrap:wrap}
 .hold .h-row2 b{color:#334155;font-size:12px}
 .pill{border:1px solid;border-radius:999px;padding:1px 9px;font-size:10px;font-weight:600}
-.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 6px}
+.del{position:absolute;top:10px;right:12px;background:none;border:none;color:#ef4444;font-size:15px;cursor:pointer;line-height:1}
+.toolbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:14px 0 6px;padding:14px 16px;background:#fff;border:1px solid #eceef2;border-radius:12px}
+.toolbar select{flex:1;min-width:220px;padding:9px 12px;border:1px solid #d1d5db;border-radius:8px;font-size:13px;max-width:320px}
+.toolbar .btn{background:#7c3aed;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;cursor:pointer;font-weight:600}
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:16px 0 6px}
 .ov .box{background:#fff;border:1px solid #eceef2;border-radius:12px;padding:15px;text-align:center}
 .ov .n{font-size:22px;font-weight:800}
 .ov .l{font-size:11px;color:#9ca3af;margin-top:3px}
+.empty{background:#fff;border:1px dashed #d1d5db;border-radius:14px;padding:28px;text-align:center;color:#9ca3af}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 .report{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);cursor:pointer;transition:transform .15s,box-shadow .2s;text-decoration:none;color:inherit;display:block}
 .report:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(16,24,40,.1)}
@@ -44,42 +49,26 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
 </div>
 <div class="wrap">
 
-  <div class="sec-t">💼 我的持仓 · 驾驶舱（数据实时·持仓为网站基础）</div>
-  <div class="holds">
-      <div class="hold">
-        <div class="h-name"><b>半导体设备ETF易方达</b><span class="h-code">159558</span></div>
-        <div class="h-row"><span>现价</span><b>1.159</b><span>成本</span><b>1.155</b><span class="pnl" style="color:#10b981">+0.35%</span></div>
-        <div class="h-row2">
-          <span class="pill" style="border-color:#eab308;color:#eab308">风险 中</span>
-          <span>买区:</span><b>0.91</b><span>卖区:</span><b>-</b>
-        </div>
-      </div>
-      <div class="hold">
-        <div class="h-name"><b>科创成长ETF广发</b><span class="h-code">588110</span></div>
-        <div class="h-row"><span>现价</span><b>0.614</b><span>成本</span><b>0.536</b><span class="pnl" style="color:#10b981">+14.55%</span></div>
-        <div class="h-row2">
-          <span class="pill" style="border-color:#eab308;color:#eab308">风险 中</span>
-          <span>买区:</span><b>0.49</b><span>卖区:</span><b>-</b>
-        </div>
-      </div></div>
+  <div class="sec-t">💼 我的持仓 · 驾驶舱 <span style="color:#9ca3af;font-size:11px;font-weight:400">（可增删清仓 · 全站随此变）</span></div>
 
-  <div class="overview">
-    <div class="ov"><div class="box"><div class="n" style="color:#7c3aed">2</div><div class="l">当前持仓数</div></div></div>
-    <div class="ov"><div class="box"><div class="n" style="color:#16a34a">1</div><div class="l">盈利标的（浮盈≥5%）</div></div></div>
-    <div class="ov"><div class="box"><div class="n" style="color:#10b981">38.7</div><div class="l">组合平均风险</div></div></div>
-    <div class="ov"><div class="box"><div class="n" style="color:#d97706">5分钟</div><div class="l">实时刷新</div></div></div>
+  <div class="toolbar">
+    <select id="addSel"></select>
+    <button class="btn" onclick="addHold()">＋ 添加持仓</button>
   </div>
+
+  <div class="holds" id="holds"></div>
+  <div class="overview" id="overview"></div>
 
   <div class="sec-t">🎯 围绕持仓 · 操作与诊断</div>
   <div class="grid">
-    <a class="report featured" href="holdings.html"><span class="tag">最常用</span><h3>📂 持仓操作建议</h3><p>输入数量看市值/盈亏，一键生成"该抛多少/买什么/买多少"的调仓建议（资金闭环）。</p><span class="arrow">打开 →</span></a>
-    <a class="report featured" href="reports/pomelo.html"><span class="tag">完整诊断</span><h3>POMELO 持仓量化报告</h3><p>风险仪表盘 + K线 + 买卖点位 + 操作纪律 + 回测，全维度诊断你的全部持仓。</p><span class="arrow">查看 →</span></a>
-    <a class="report" href="invest.html"><span class="tag">面板</span><h3>投资面板 · 持仓+ETF库</h3><p>持仓跟踪 + 高弹性ETF检索与详情，从持仓视角展开。</p><span class="arrow">查看 →</span></a>
+    <a class="report featured" href="holdings.html"><span class="tag">最常用</span><h3>📂 持仓操作建议 · 详情</h3><p>输入数量看市值/盈亏，一键"该抛多少/买什么/买多少"调仓建议（资金闭环），可管理每只持仓。</p><span class="arrow">打开 →</span></a>
+    <a class="report featured" href="reports/pomelo.html"><span class="tag">完整诊断</span><h3>POMELO 持仓量化报告</h3><p>风险仪表盘 + K线 + 买卖点位 + 操作纪律 + 回测。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="invest.html"><span class="tag">面板</span><h3>投资面板 · 持仓+ETF库</h3><p>持仓跟踪 + 高弹性ETF检索与详情。</p><span class="arrow">查看 →</span></a>
   </div>
 
   <div class="sec-t">⚡ 是否考虑换入更强的强势标的（激进补强）</div>
   <div class="grid">
-    <a class="report featured" href="reports/buy_rank_etf.html"><span class="tag">推荐换入</span><h3>ETF 购买建议排行榜</h3><p>激进风格高弹性评分榜（已剔除红利/宽基/黄金/银行）。可与你的持仓对比，考虑换入更强势的。</p><span class="arrow">查看 →</span></a>
+    <a class="report featured" href="reports/buy_rank_etf.html"><span class="tag">推荐换入</span><h3>ETF 购买建议排行榜</h3><p>激进风格高弹性评分榜（已剔除红利/宽基/黄金/银行）。</p><span class="arrow">查看 →</span></a>
     <a class="report" href="reports/buy_rank.html"><span class="tag">A股模型</span><h3>A股 购买建议排行榜</h3><p>全市场多因子打分个股买入建议。</p><span class="arrow">查看 →</span></a>
   </div>
 
@@ -91,7 +80,55 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
     <a class="report" href="reports/backtest-ma8.html"><span class="tag">回测</span><h3>双均线Top8回测</h3><p>夏普与超额收益。</p><span class="arrow">查看 →</span></a>
   </div>
 
-  <div class="note">本站由算法基于历史公开数据自动生成，已考虑万分之0.5交易成本。持仓数据来自 holdings.json，网站所有分析随持仓动态联动。</div>
-  <div class="foot">POMELO · 持仓量化驾驶舱 · 数据来源：腾讯证券公开行情 · 更新 2026-08-12 04:20</div>
+  <div class="note">💡 本站持仓基于浏览器 localStorage（与其他页面共享）。你在本站任意页面添加/清仓持仓，全站(同域名)都会同步变化。深层分析(报告/回测)基于后端缓存需另行重建。</div>
+  <div class="foot">POMELO · 持仓量化驾驶舱 · 数据来源：腾讯证券公开行情 · 更新 2026-08-12 04:30:46</div>
 </div>
+
+<script>
+const LIVE = {"159558": {"name": "半导体设备ETF易方达", "price": 1.159, "cost": 1.155, "pnl": 0.35, "risk": 37.6, "low": 0.91, "sell": null}, "588110": {"name": "科创成长ETF广发", "price": 0.614, "cost": 0.536, "pnl": 14.55, "risk": 39.7, "low": 0.49, "sell": null}};
+const POOL = [{"code": "512010", "name": "医药ETF易方达", "price": 0.403, "score": 74.6, "bang": "医药"}, {"code": "512170", "name": "医疗ETF华宝", "price": 0.351, "score": 69.6, "bang": "医药"}, {"code": "515950", "name": "医药50ETF富国", "price": 0.998, "score": 69.3, "bang": "医药"}, {"code": "159992", "name": "创新药ETF银华", "price": 0.922, "score": 68.5, "bang": "医药"}, {"code": "512690", "name": "酒ETF鹏华", "price": 0.441, "score": 67.5, "bang": "消费"}, {"code": "159938", "name": "医药ETF广发", "price": 0.684, "score": 66.7, "bang": "医药"}, {"code": "159929", "name": "医药ETF汇添富", "price": 1.403, "score": 66.5, "bang": "医药"}, {"code": "515650", "name": "消费50ETF富国", "price": 1.084, "score": 61.9, "bang": "消费"}, {"code": "159928", "name": "消费ETF汇添富", "price": 0.681, "score": 60.8, "bang": "消费"}, {"code": "512980", "name": "传媒ETF广发", "price": 0.87, "score": 49.5, "bang": "娱乐"}, {"code": "515230", "name": "软件ETF国泰", "price": 0.734, "score": 47.1, "bang": "科技"}, {"code": "512400", "name": "有色金属ETF南方", "price": 1.922, "score": 44.7, "bang": "周期"}, {"code": "159852", "name": "软件ETF嘉实", "price": 0.726, "score": 43.6, "bang": "科技"}, {"code": "159869", "name": "游戏ETF华夏", "price": 1.133, "score": 42.7, "bang": "娱乐"}, {"code": "515860", "name": "科技ETF嘉实", "price": 2.133, "score": 41.1, "bang": "科技"}, {"code": "159766", "name": "旅游ETF富国", "price": 0.569, "score": 40.6, "bang": "消费"}, {"code": "512480", "name": "半导体ETF国联安", "price": 1.07, "score": 39.6, "bang": "科技"}, {"code": "515000", "name": "科技ETF华宝", "price": 1.308, "score": 36.7, "bang": "科技"}, {"code": "512580", "name": "环保ETF广发", "price": 1.217, "score": 35.2, "bang": "新能源"}, {"code": "515030", "name": "新能源车ETF华夏", "price": 1.667, "score": 32.4, "bang": "新能源"}, {"code": "515790", "name": "光伏ETF华泰柏瑞", "price": 0.868, "score": 30.7, "bang": "新能源"}, {"code": "159915", "name": "创业板ETF易方达", "price": 3.565, "score": 30.1, "bang": "成长"}, {"code": "512520", "name": "MSCI中国ETF华泰柏瑞", "price": 1.489, "score": 29.5, "bang": "军工"}, {"code": "512720", "name": "计算机ETF国泰", "price": 1.222, "score": 29.5, "bang": "科技"}, {"code": "512660", "name": "军工ETF国泰", "price": 1.148, "score": 28.3, "bang": "军工"}, {"code": "512760", "name": "芯片ETF国泰", "price": 1.14, "score": 25.9, "bang": "科技"}, {"code": "515050", "name": "通信ETF华夏", "price": 1.017, "score": 23.5, "bang": "科技"}, {"code": "159995", "name": "芯片ETF华夏", "price": 1.187, "score": 23.3, "bang": "科技"}, {"code": "588000", "name": "科创50ETF华夏", "price": 1.806, "score": 21.4, "bang": "科技"}, {"code": "515880", "name": "通信ETF国泰", "price": 0.646, "score": 20.2, "bang": "科技"}, {"code": "159949", "name": "创业板50ETF华安", "price": 1.666, "score": 17.1, "bang": "成长"}, {"code": "159986", "name": "消费100ETF", "price": 1.045, "score": 15.8, "bang": "科技"}];
+const DEFAULT_CODES = ["159558", "588110"];
+const LS_LIST='hold_list', LS_QTY='hold_qty', LS_BUY='hold_buy';
+
+function getList(){ var d; try{d=JSON.parse(localStorage.getItem(LS_LIST));}catch(e){d=null;} return (Array.isArray(d)&&d.length)? d : DEFAULT_CODES.slice(); }
+function saveList(l){ localStorage.setItem(LS_LIST, JSON.stringify(l)); }
+function getQty(c){ var d; try{d=JSON.parse(localStorage.getItem(LS_QTY)||'{}');}catch(e){d={};} return d[c]||0; }
+function getBuy(c){ var d; try{d=JSON.parse(localStorage.getItem(LS_BUY)||'{}');}catch(e){d={};} return d[c]||null; }
+function fmt(v){ return (v===null||v===undefined||isNaN(v)) ? '-' : (Number(v).toFixed(2)); }
+
+function render(){
+  var list=getList(), holds=document.getElementById('holds'), ov=document.getElementById('overview');
+  var html='';
+  if(!list.length) html='<div class="empty">暂无持仓。用上方下拉添加想持有的ETF。</div>';
+  else list.forEach(function(code){
+    var d=LIVE[code];
+    if(!d){ var p=POOL.find(function(x){return x.code===code;}); d = p ? {name:p.name,price:p.price,cost:null,pnl:null,risk:null,low:null,sell:null} : {name:'代码'+code,price:null,cost:null,pnl:null,risk:null,low:null,sell:null}; }
+    var pnl=d.pnl, pc = (pnl!=null && pnl>=0)?'#16a34a':'#ef4444';
+    var risk=d.risk, rc = risk>=80?'#ef4444':(risk>=60?'#f97316':(risk>=35?'#eab308':'#10b981'));
+    var rl = (risk==null)?'-':(risk>=80?'极高':(risk>=60?'高':(risk>=35?'中':'低')));
+    var pr = (d.price==null)?'-':(Number(d.price).toFixed(3));
+    var pnlS = (pnl==null)?'-':((pnl>=0?'+':'')+pnl.toFixed(2)+'%');
+    html+='<div class="hold"><button class="del" data-code="'+code+'" onclick="delHold(this)" title="移除/清仓">✕</button>'+
+      '<div class="h-name"><b>'+d.name+'</b><span class="h-code">'+code+'</span></div>'+
+      '<div class="h-row"><span>现价</span><b>'+pr+'</b><span>成本</span><b>'+(d.cost?fmt(d.cost):'-')+'</b><span class="pnl" style="color:'+pc+'">'+pnlS+'</span></div>'+
+      '<div class="h-row2"><span class="pill" style="border-color:'+rc+';color:'+rc+'">风险 '+rl+'</span>'+
+      '<span>买区</span><b>'+fmt(d.low)+'</b><span>卖区</span><b>'+fmt(d.sell)+'</b></div></div>';
+  });
+  holds.innerHTML=html;
+
+  var n=list.length, sell=0, tr=0, cnt=0;
+  list.forEach(function(code){ var d=LIVE[code]; if(d&&d.pnl!=null&&d.pnl>=5)sell++; if(d&&d.risk!=null){tr+=d.risk;cnt++;} });
+  var avg = cnt? (tr/cnt).toFixed(1) : '-';
+  var ac = (avg!='-' && avg>=60)?'#f97316':'#10b981';
+  ov.innerHTML =
+    '<div class="ov"><div class="box"><div class="n" style="color:#7c3aed">'+n+'</div><div class="l">持仓数</div></div></div>'+
+    '<div class="ov"><div class="box"><div class="n" style="color:#16a34a">'+sell+'</div><div class="l">盈利≥5%</div></div></div>'+
+    '<div class="ov"><div class="box"><div class="n" style="color:'+ac+'">'+avg+'</div><div class="l">组合平均风险</div></div></div>'+
+    '<div class="ov"><div class="box"><div class="n" style="color:#d97706">5分钟</div><div class="l">实时刷新</div></div></div>';
+}
+function addHold(){ var sel=document.getElementById('addSel'); var v=sel.value; sel.value=''; if(!v) return; var list=getList(); if(list.indexOf(v)<0){list.push(v); saveList(list);} fillSelect(); render(); }
+function delHold(btn){ var code=btn.getAttribute('data-code'); if(!confirm('确认移除/清仓该持仓?')) return; var list=getList().filter(function(c){return c!==code;}); saveList(list); fillSelect(); render(); }
+function fillSelect(){ var sel=document.getElementById('addSel'); var list=getList(); var opts=''; POOL.forEach(function(p){ if(list.indexOf(p.code)<0) opts+='<option value="'+p.code+'">'+p.name+'（评分'+(p.score==null?'-':p.score)+'）</option>'; }); sel.innerHTML='<option value="">— 从高弹性候选池选一只加入 —</option>'+opts; }
+window.onload=function(){ fillSelect(); render(); };
+</script>
 </body></html>
