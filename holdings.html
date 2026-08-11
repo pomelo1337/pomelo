@@ -194,13 +194,14 @@ function genAdvice(){
   let bought = false;
 
   // 第一步 卖出评估
-  let sell_html='', sellTotal=0, sellHas=false;
+  let sell_html='', sellTotal=0, sellHas=false, heldMV=0, heldCnt=0;
   let nbsell=0; // 有效数量持仓数
   codes.forEach(function(code){
     let e = getEtf(code); if(!e) return;
     let q = getQty(code); if(q<=0){ sell_html+='<div class="wa">· <b>'+e.name+'</b> 未输入持仓数量，跳过。</div>'; return; }
-    nbsell++;
+    nbsell++; heldCnt++;
     let price=e.price||0, buy=getBuy(code);
+    heldMV += q*price;
     let mv=q*price, costv=q*buy, pnl=mv-costv, pct=costv>0? pnl/costv*100:0;
     let pnlnote = pct>=0 ? '<b style="color:#16a34a">盈+'+pct.toFixed(1)+'%</b>' : '<b style="color:#dc2626">亏'+pct.toFixed(1)+'%</b>';
     let sella=e.sella||0, stop=e.stop||0, target=e.target||0, stage=String(e.stage||'');
@@ -228,24 +229,38 @@ function genAdvice(){
   }
   html += '<div style="margin:10px 0 4px;font-weight:700;color:#9a3412">【第一步 · 该抛多少】卖出评估</div>'+sell_html;
 
-  // 第二步 买入推荐 (满仓 50/30/20 = 100%)
+  // 第二步 买入推荐 —— 资金闭环：买入金额<=实际可动用资金(卖出腾出+新增现金)
   let TA = totalAssets();
+  // 持仓市值 heldMV 已在第一步累加；现金 = 总资产 - 持仓市值(满仓则为0)
+  let cashNew = TA>0 ? Math.max(0, TA- heldMV) : 0;           // 额外可追加的现金
+  let availCash = sellTotal + cashNew;                          // 实际能用来买入的钱
   if(TA>0){
     let pick = RECO.slice(0,3);
     let ratios = [0.50, 0.30, 0.20];
-    let totalPct = 0; let rows='';
-    pick.forEach(function(r,k){
-      let price=r.price||0;
-      let amt = Math.floor(TA*ratios[k]/100)*100;
-      if(amt<1) return;
-      let shares = price>0 ? Math.max(0, Math.floor(amt/price/100)*100) : 0;
-      let pct = Math.round(ratios[k]*100); totalPct += pct;
-      rows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · 占总资产'+pct+'%）。</div>';
-    });
-    rows += '<div class="op" style="background:#f5f3ff;border-color:#ddd6fe;width:100%"><b style="color:#6d28d9">本次推荐合计：占总资产 '+totalPct+'%（'+money(Math.floor(TA*totalPct/100))+' 元）</b>，高收益导向满仓配置。</div>';
-    html += '<div style="margin:14px 0 4px;font-weight:700;color:#065f46">【第二步 · 买什么/买多少】买入推荐（满仓）</div>'+rows;
+    let rows='', buySum=0;
+    if(availCash<=1){
+      // 已满仓且无卖出：无钱可买
+      rows = '<div class="op wa" style="width:100%">💡 目前资金已全部锁定在持仓中（市值约 '+money(heldMV)+' 元），且第一步未触发卖出。若要买入下方强势标的，需<strong>先卖出部分持仓</strong>腾出资金，或<strong>追加现金</strong>。不做多余买入。</div>';
+      buySum=0;
+    } else {
+      let src='';
+      if(sellTotal>0 && cashNew>0) src='卖出持仓腾出 '+money(sellTotal)+' 元 + 新增现金 '+money(cashNew)+' 元';
+      else if(sellTotal>0) src='卖出持仓腾出的 '+money(sellTotal)+' 元';
+      else if(cashNew>0) src='新增现金 '+money(cashNew)+' 元';
+      rows = '<div class="wa" style="width:100%">💰 可动用买入资金：'+src+'（合计 <b>'+money(availCash)+' 元</b>）。按强势标的 50/30/20% 比例配置：</div>';
+      pick.forEach(function(r,k){
+        let price=r.price||0;
+        let amt = Math.floor(availCash*ratios[k]/100)*100;
+        if(amt<1) return;
+        let shares = price>0 ? Math.max(0, Math.floor(amt/price/100)*100) : 0;
+        buySum += amt;
+        rows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · 占可动用资金'+Math.round(ratios[k]*100)+'%）。</div>';
+      });
+      rows += '<div class="op" style="background:#f5f3ff;border-color:#ddd6fe;width:100%"><b style="color:#6d28d9">本次买入合计：'+money(buySum)+' 元</b>（= 可动用资金，不超总资产 '+money(TA)+'）。全部从持仓/资金池内部调配，不产生额外投入。</div>';
+    }
+    html += '<div style="margin:14px 0 4px;font-weight:700;color:#065f46">【第二步 · 买什么/买多少】买入推荐（仅用好已腾出的资金）</div>'+rows;
   } else {
-    html += '<div style="margin:14px 0 4px;font-weight:700;color:#065f46">【第二步 · 买什么/买多少】买入推荐</div><div class="wa">请在【总资产】输入你的本金金额，系统自动按满仓比例(50/30/20%)给出买入份数。</div>';
+    html += '<div style="margin:14px 0 4px;font-weight:700;color:#065f46">【第二步 · 买什么/买多少】买入推荐</div><div class="wa">请在【总资产】输入你的本金金额，系统会把「卖出腾出的资金 + 新增现金」重新配置到强势标的，资金始终不超总资产。</div>';
   }
 
   // 第三步 组合再平衡
