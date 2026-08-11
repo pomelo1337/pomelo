@@ -123,8 +123,8 @@ button.adv:hover{background:#6d28d9}
   </div>
 
 <div class="card asset">
-  <div class="at"><span>💰 总资产（元）</span><i>操作建议按此金额配置买卖比例</i></div>
-  <input type="number" id="totalAsset" placeholder="如 500000（50万元）" min="0">
+  <div class="at"><span>💰 总资产（单位：元）</span><i>操作建议按你的总资产大小配置买卖金额</i></div>
+  <input type="number" id="totalAsset" placeholder="请输入你的本金金额，如 5000" min="0">
 </div>
 <div class="hdrshell"><div class="meta" style="margin:0">基于量化点位自动生成的操作建议</div></div>
 <button class="adv" onclick="genAdvice()">💡 生成操作建议</button>
@@ -216,15 +216,26 @@ function genAdvice(){
   let TAset = totalAssets() > 0;
   let TA = TAset ? totalAssets() : 0;
   if(RECO && RECO.length){
-    RECO.forEach(function(r,k){
+    // 取评分最高前3只, 资金集中 (小资金不分太散)
+    let pick = RECO.slice(0,3);
+    // 每只投入占总资产比例: Top1 15%, Top2 10%, Top3 6% (合计~31%作为可投机动资金)
+    let ratios = [0.15, 0.10, 0.06];
+    pick.forEach(function(r,k){
       let price=r.price||0;
-      // 基于总资产分配: 前2名各8%, 中2名各5%, 第5名3%(合计约24%); 未填总资产则退回固定10万/5万
-      let ratio = TAset ? (k<2?0.08:(k<4?0.05:0.03)) : 0;
-      let amt = TAset ? Math.round(TA*ratio/100)*100 : (k<2?100000:50000);
-      let note = TAset ? ('总资产'+money(TA)+'的'+Math.round(ratio*100)+'%') : '参考金额';
-      let shares = price>0 ? Math.round(amt/price/100)*100 : 0;
-      recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · '+note+'）作为加配/换筹标的。</div>';
+      if(!TAset){
+        // 未填总资产: 参考金额(每只约整千), 小资金也可接受
+        let amt = k<2 ? 10000 : 5000;
+        let shares = price>0 ? Math.round(amt/price/100)*100 : 0;
+        recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · 参考金额）。</div>';
+        return;
+      }
+      let amt = Math.floor(TA*ratios[k]/100)*100;   // 金额=总资产×比例
+      if(amt<1) return;                              // 总资产太小(几百元)则跳过该只
+      let shares = price>0 ? Math.max(0, Math.floor(amt/price/100)*100) : 0;
+      let note = '总资产'+money(TA)+'的'+Math.round(ratios[k]*100)+'%';
+      recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · '+note+'）资金集中投入。</div>';
     });
+    if(TAset) recoRows+='<div class="wa" style="margin-top:4px">小资金建议优先集中评分最高的前两只，避免过度分散。</div>';
   }
 
   let buy_html = (low_html? '<div style="margin:8px 0;color:#444">① 持仓低吸机会：</div>'+low_html : '');
