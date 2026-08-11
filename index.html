@@ -1,118 +1,97 @@
 <!DOCTYPE html><html lang="zh-CN"><head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>POMELO · 量化投资研究站</title>
+<title>POMELO · 持仓驾驶舱</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#f7f8fa;color:#1f2733;-webkit-font-smoothing:antialiased}
-.hero{background:linear-gradient(160deg,#ffffff,#f8fafc);border-bottom:1px solid #eef0f4;padding:64px 24px 48px;text-align:center}
-.hero h1{font-size:44px;font-weight:800;letter-spacing:8px;color:#111827}
-.hero .sub{color:#6b7280;font-size:15px;letter-spacing:4px;margin-top:12px;font-weight:500}
-.hero .live{display:inline-flex;align-items:center;gap:6px;margin-top:16px;background:#ecfdf5;border:1px solid #a7f3d0;color:#059669;padding:5px 14px;border-radius:999px;font-size:12px}
-.hero .live::before{content:'';width:8px;height:8px;border-radius:50%;background:#10b981;box-shadow:0 0 0 3px rgba(16,185,129,.18);animation:pulse 1.6s infinite}
-@keyframes pulse{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
-.wrap{max-width:980px;margin:32px auto 0;padding:0 20px 64px}
-.sec-t{font-size:15px;color:#374151;font-weight:700;margin:32px 0 14px;display:flex;align-items:center;gap:8px}
+.hero{background:linear-gradient(160deg,#111827,#1f2937);padding:48px 24px 40px;text-align:center;color:#fff}
+.hero h1{font-size:38px;font-weight:800;letter-spacing:8px}
+.hero .sub{color:#9ca3af;font-size:13px;letter-spacing:3px;margin-top:10px}
+.wrap{max-width:920px;margin:28px auto 0;padding:0 20px 64px}
+.sec-t{font-size:15px;color:#374151;font-weight:700;margin:30px 0 14px;display:flex;align-items:center;gap:8px}
 .sec-t::before{content:'';width:4px;height:15px;border-radius:2px;background:#7c3aed}
+.holds{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.hold{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:16px;box-shadow:0 1px 3px rgba(16,24,40,.05)}
+.hold .h-name{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hold .h-name b{font-size:14px}
+.hold .h-code{color:#9ca3af;font-size:11px}
+.hold .h-row{display:flex;gap:10px;align-items:baseline;font-size:12px;color:#6b7280;flex-wrap:wrap}
+.hold .h-row b{font-size:15px;color:#111827}
+.hold .pnl{font-weight:700;font-size:15px}
+.hold .h-row2{display:flex;gap:8px;align-items:center;margin-top:10px;font-size:11px;color:#6b7280;flex-wrap:wrap}
+.hold .h-row2 b{color:#334155;font-size:12px}
+.pill{border:1px solid;border-radius:999px;padding:1px 9px;font-size:10px;font-weight:600}
+.overview{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin:18px 0 6px}
+.ov .box{background:#fff;border:1px solid #eceef2;border-radius:12px;padding:15px;text-align:center}
+.ov .n{font-size:22px;font-weight:800}
+.ov .l{font-size:11px;color:#9ca3af;margin-top:3px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
-.report{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:20px;box-shadow:0 1px 3px rgba(16,24,40,.04);cursor:pointer;transition:transform .15s, box-shadow .2s;text-decoration:none;color:inherit;display:block}
-.report:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(16,24,40,.09)}
+.report{background:#fff;border:1px solid #eceef2;border-radius:14px;padding:18px;box-shadow:0 1px 3px rgba(16,24,40,.05);cursor:pointer;transition:transform .15s,box-shadow .2s;text-decoration:none;color:inherit;display:block}
+.report:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(16,24,40,.1)}
 .report .tag{display:inline-block;background:#eef2ff;color:#4f46e5;font-size:11px;font-weight:600;padding:2px 9px;border-radius:5px;margin-bottom:10px}
-.report h3{font-size:16px;color:#111827;margin-bottom:6px}
+.report h3{font-size:15px;color:#111827;margin-bottom:6px}
 .report p{font-size:12px;color:#6b7280;line-height:1.6}
 .report .arrow{color:#7c3aed;font-size:13px;margin-top:8px;display:inline-block}
 .report.featured{border:2px solid #7c3aed;background:linear-gradient(180deg,#faf8ff,#fff)}
 .report.featured .tag{background:#7c3aed;color:#fff}
-.stat{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:18px}
-.stat .box{background:#fff;border:1px solid #eceef2;border-radius:12px;padding:16px;text-align:center}
-.stat .n{font-size:24px;font-weight:800}
-.note{background:#fffdf5;border:1px solid #fdeeb8;border-radius:12px;padding:16px 20px;margin-top:40px;font-size:12px;color:#92600a;line-height:1.8}
-.foot{text-align:center;color:#9ca3af;font-size:11px;margin-top:36px}
+.note{background:#fffdf5;border:1px solid #fdeeb8;border-radius:12px;padding:14px 18px;margin-top:34px;font-size:12px;color:#92600a;line-height:1.8}
+.foot{text-align:center;color:#9ca3af;font-size:11px;margin-top:30px}
 </style></head><body>
 <div class="hero">
   <h1>POMELO</h1>
-  <div class="sub">高弹性ETF投资站</div>
-  <div class="live">⚡ 激进风格 · 只选高弹性ETF，剔除红利/宽基/黄金/银行等低收益赛道</div>
+  <div class="sub">⚡ 激进风格 高弹性投资 · 以你的持仓为核心</div>
 </div>
 <div class="wrap">
-  <div class="stat">
-    <div class="box"><div style="font-size:12px;color:#9ca3af">分析标的</div><div class="n" style="color:#7c3aed">2</div><div style="font-size:11px;color:#9ca3af">持仓ETF</div></div>
-    <div class="box"><div style="font-size:12px;color:#9ca3af">历史数据</div><div class="n" style="color:#16a34a">400日</div><div style="font-size:11px;color:#9ca3af">前复权K线</div></div>
-    <div class="box"><div style="font-size:12px;color:#9ca3af">研究框架</div><div class="n" style="font-size:19px;color:#111827">统计×因子×测</div><div style="font-size:11px;color:#9ca3af">多策略×风险</div></div>
-    <div class="box"><div style="font-size:12px;color:#9ca3af">刷新频率</div><div class="n" style="color:#d97706">5分钟</div><div style="font-size:11px;color:#9ca3af">实时变动</div></div>
+
+  <div class="sec-t">💼 我的持仓 · 驾驶舱（数据实时·持仓为网站基础）</div>
+  <div class="holds">
+      <div class="hold">
+        <div class="h-name"><b>半导体设备ETF易方达</b><span class="h-code">159558</span></div>
+        <div class="h-row"><span>现价</span><b>1.159</b><span>成本</span><b>1.155</b><span class="pnl" style="color:#10b981">+0.35%</span></div>
+        <div class="h-row2">
+          <span class="pill" style="border-color:#eab308;color:#eab308">风险 中</span>
+          <span>买区:</span><b>0.91</b><span>卖区:</span><b>-</b>
+        </div>
+      </div>
+      <div class="hold">
+        <div class="h-name"><b>科创成长ETF广发</b><span class="h-code">588110</span></div>
+        <div class="h-row"><span>现价</span><b>0.614</b><span>成本</span><b>0.536</b><span class="pnl" style="color:#10b981">+14.55%</span></div>
+        <div class="h-row2">
+          <span class="pill" style="border-color:#eab308;color:#eab308">风险 中</span>
+          <span>买区:</span><b>0.49</b><span>卖区:</span><b>-</b>
+        </div>
+      </div></div>
+
+  <div class="overview">
+    <div class="ov"><div class="box"><div class="n" style="color:#7c3aed">2</div><div class="l">当前持仓数</div></div></div>
+    <div class="ov"><div class="box"><div class="n" style="color:#16a34a">1</div><div class="l">盈利标的（浮盈≥5%）</div></div></div>
+    <div class="ov"><div class="box"><div class="n" style="color:#10b981">38.7</div><div class="l">组合平均风险</div></div></div>
+    <div class="ov"><div class="box"><div class="n" style="color:#d97706">5分钟</div><div class="l">实时刷新</div></div></div>
   </div>
 
-  <div class="sec-t">📊 投资面板</div>
+  <div class="sec-t">🎯 围绕持仓 · 操作与诊断</div>
   <div class="grid">
-    <a class="report featured" href="invest.html">
-      <span class="tag">实时跟踪 · 新</span>
-      <h3>我的持仓 + 量化精选ETF</h3>
-      <p>我的持仓板块实时跟踪你的全部当前持仓(成本/盈亏/买卖点位/K线/操作建议，随 holdings.json 动态变化) + 量化模型从高弹性ETF池中筛出强势标的(医药/消费/科技/新能源等，已剔除红利/宽基/黄金/银行)。</p>
-      <span class="arrow">打开投资面板 →</span>
-    </a>
+    <a class="report featured" href="holdings.html"><span class="tag">最常用</span><h3>📂 持仓操作建议</h3><p>输入数量看市值/盈亏，一键生成"该抛多少/买什么/买多少"的调仓建议（资金闭环）。</p><span class="arrow">打开 →</span></a>
+    <a class="report featured" href="reports/pomelo.html"><span class="tag">完整诊断</span><h3>POMELO 持仓量化报告</h3><p>风险仪表盘 + K线 + 买卖点位 + 操作纪律 + 回测，全维度诊断你的全部持仓。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="invest.html"><span class="tag">面板</span><h3>投资面板 · 持仓+ETF库</h3><p>持仓跟踪 + 高弹性ETF检索与详情，从持仓视角展开。</p><span class="arrow">查看 →</span></a>
   </div>
 
-  <div class="sec-t">📈 研究报告</div>
+  <div class="sec-t">⚡ 是否考虑换入更强的强势标的（激进补强）</div>
   <div class="grid">
-    <a class="report featured" href="holdings.html">
-      <span class="tag">最新 · 持仓管理</span>
-      <h3>📂 我的持仓 · 操作建议</h3>
-      <p>输入持仓数量即可查看市值/盈亏，一键生成"该抛多少/该买什么/买多少"的量化操作建议。</p>
-      <span class="arrow">打开 →</span>
-    </a>
-    <a class="report featured" href="reports/buy_rank_etf.html">
-      <span class="tag">最新 · 排行榜</span>
-      <h3>ETF 多因子购买建议排行榜</h3>
-      <p>高弹性ETF购买排行榜(激进风格·剔除低收益赛道)。动量×趋势×风险横截面评分，只推医药/消费/科技/新能源等强势成长ETF。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/buy_rank.html">
-      <span class="tag">多因子模型</span>
-      <h3>A股 购买建议排行榜</h3>
-      <p>全市场排除科创板/ST的多因子打分，输出个股买入建议（目标/止损/仓位/评级）。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report featured" href="reports/pomelo.html">
-      <span class="tag">推荐</span>
-      <h3>POMELO 实时量化分析报告</h3>
-      <p>风险指数仪表盘 + 实时K线图 + 量化买卖点位 + 持仓策略建议 + 分价位操作纪律 + 多策略回测，全维度诊断你的全部当前持仓ETF(随 holdings.json 动态变化)。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/quant-analysis.html">
-      <span class="tag">深度研究</span>
-      <h3>量化深度分析</h3>
-      <p>统计画像、因子挖掘、风险建模、多策略回测，历史验证最优策略。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/selection.html">
-      <span class="tag">模型输出</span>
-      <h3>多因子选股报告</h3>
-      <p>动量+强弱+PE/PB多因子综合排名，输出候选池。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/backtest-ma10.html">
-      <span class="tag">策略回测</span>
-      <h3>双均线Top10回测</h3>
-      <p>多因子Top10组合的双均线择时回测，对比沪深300。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/backtest-ma8.html">
-      <span class="tag">策略回测</span>
-      <h3>双均线Top8回测</h3>
-      <p>Top8组合的双均线策略，夏普与超额收益分析。</p>
-      <span class="arrow">查看 →</span>
-    </a>
-    <a class="report" href="reports/etf-technical.html">
-      <span class="tag">技术分析</span>
-      <h3>ETF技术面速览</h3>
-      <p>持仓ETF现价、盈亏、双均线多头信号速览。</p>
-      <span class="arrow">查看 →</span>
-    </a>
+    <a class="report featured" href="reports/buy_rank_etf.html"><span class="tag">推荐换入</span><h3>ETF 购买建议排行榜</h3><p>激进风格高弹性评分榜（已剔除红利/宽基/黄金/银行）。可与你的持仓对比，考虑换入更强势的。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="reports/buy_rank.html"><span class="tag">A股模型</span><h3>A股 购买建议排行榜</h3><p>全市场多因子打分个股买入建议。</p><span class="arrow">查看 →</span></a>
   </div>
 
-  <div class="note">
-    本站由算法基于历史公开数据自动生成，已考虑万分之0.5交易成本。
+  <div class="sec-t">🧪 独立研究</div>
+  <div class="grid">
+    <a class="report" href="reports/quant-analysis.html"><span class="tag">深度研究</span><h3>量化深度分析</h3><p>统计画像、因子、风险建模、多策略回测。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="reports/selection.html"><span class="tag">模型输出</span><h3>多因子选股报告</h3><p>动量+PE/PB多因子候选池。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="reports/backtest-ma10.html"><span class="tag">回测</span><h3>双均线Top10回测</h3><p>对比沪深300。</p><span class="arrow">查看 →</span></a>
+    <a class="report" href="reports/backtest-ma8.html"><span class="tag">回测</span><h3>双均线Top8回测</h3><p>夏普与超额收益。</p><span class="arrow">查看 →</span></a>
   </div>
-  <div class="foot">POMELO · 量化投资研究站 · 数据来源：腾讯证券公开行情</div>
+
+  <div class="note">本站由算法基于历史公开数据自动生成，已考虑万分之0.5交易成本。持仓数据来自 holdings.json，网站所有分析随持仓动态联动。</div>
+  <div class="foot">POMELO · 持仓量化驾驶舱 · 数据来源：腾讯证券公开行情 · 更新 2026-08-12 04:20</div>
 </div>
 </body></html>
