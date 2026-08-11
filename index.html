@@ -81,7 +81,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei
   </div>
 
   <div class="note">💡 本站持仓基于浏览器 localStorage（与其他页面共享）。你在本站任意页面添加/清仓持仓，全站(同域名)都会同步变化。深层分析(报告/回测)基于后端缓存需另行重建。</div>
-  <div class="foot">POMELO · 持仓量化驾驶舱 · 数据来源：腾讯证券公开行情 · 更新 2026-08-12 04:30:46</div>
+  <div class="foot">POMELO · 持仓量化驾驶舱 · 数据来源：腾讯证券公开行情 · 更新 2026-08-12 04:35:22</div>
 </div>
 
 <script>
@@ -130,5 +130,9 @@ function addHold(){ var sel=document.getElementById('addSel'); var v=sel.value; 
 function delHold(btn){ var code=btn.getAttribute('data-code'); if(!confirm('确认移除/清仓该持仓?')) return; var list=getList().filter(function(c){return c!==code;}); saveList(list); fillSelect(); render(); }
 function fillSelect(){ var sel=document.getElementById('addSel'); var list=getList(); var opts=''; POOL.forEach(function(p){ if(list.indexOf(p.code)<0) opts+='<option value="'+p.code+'">'+p.name+'（评分'+(p.score==null?'-':p.score)+'）</option>'; }); sel.innerHTML='<option value="">— 从高弹性候选池选一只加入 —</option>'+opts; }
 window.onload=function(){ fillSelect(); render(); };
+// 实时联动: 其他标签页(持仓界面/invest)改持仓时, 本页自动重新渲染
+window.addEventListener('storage', function(ev){
+  if(ev.key==='hold_list' || ev.key==='hold_buy'){ fillSelect(); render(); }
+});
 </script>
 </body></html>

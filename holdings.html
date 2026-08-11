@@ -191,6 +191,10 @@ window.onload = function(){
   ta.addEventListener('input',function(){ let v=parseFloat(this.value); if(!isNaN(v)&&v>=0) localStorage.setItem(LS_ASSETS,this.value); });
   render(); fillPool();
 };
+// 实时联动: 其他标签页(首页/invest)改持仓时, 本页自动重新渲染
+window.addEventListener('storage', function(ev){
+  if(ev.key===LS_LIST || ev.key===LS_BUY){ render(); fillPool(); }
+});
 
 // ============ 生成操作建议 ============
 function genAdvice(){
