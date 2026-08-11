@@ -28,6 +28,11 @@ h1{font-size:22px;color:#111} .meta{color:#888;font-size:12px;margin:6px 0 18px}
 .hdrshell{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:6px}
 .totalcard{display:flex;gap:24px;flex-wrap:wrap}
 .totalcard .ti{font-size:12px;color:#9ca3af}.totalcard .tv{font-size:20px;font-weight:800;color:#111}
+.card.asset{background:#fff;border:1px solid #e8ecf2;border-radius:14px;padding:14px 16px;margin-top:12px;box-shadow:0 1px 6px rgba(16,24,40,.05)}
+.card.asset .at{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.card.asset .at i{font-style:normal;font-size:11px;color:#9ca3af}
+.card.asset input{width:100%;padding:12px 14px;border-radius:10px;border:2px solid #e2e8f0;font-size:16px;outline:none}
+.card.asset input:focus{border-color:#8b5cf6}
 button.adv{background:#7c3aed;color:#fff;border:none;border-radius:12px;padding:14px 20px;font-size:16px;font-weight:700;width:100%;cursor:pointer;transition:background .2s;margin-top:4px}
 button.adv:hover{background:#6d28d9}
 .advout{background:#fff8f0;border:1px solid #ffe0b2;border-radius:12px;padding:16px;margin-top:14px;font-size:14px;line-height:1.9;display:none}
@@ -117,6 +122,10 @@ button.adv:hover{background:#6d28d9}
     </div>
   </div>
 
+<div class="card asset">
+  <div class="at"><span>💰 总资产（元）</span><i>操作建议按此金额配置买卖比例</i></div>
+  <input type="number" id="totalAsset" placeholder="如 500000（50万元）" min="0">
+</div>
 <div class="hdrshell"><div class="meta" style="margin:0">基于量化点位自动生成的操作建议</div></div>
 <button class="adv" onclick="genAdvice()">💡 生成操作建议</button>
 <div class="advout" id="advout"></div>
@@ -127,9 +136,12 @@ const SLEEP1=false;
 window.onload = function() {
   let s=null; try{s=JSON.parse(localStorage.getItem('hold_qty')||'{}')}catch(e){s={}}
   for(let i=0;i<DATA.length;i++){ let el=document.getElementById('qty'+i); if(s[DATA[i].code]!==undefined) el.value=s[DATA[i].code]; calc(i); }
+  let ta=document.getElementById('totalAsset');
+  if(ta){ let a=localStorage.getItem('hold_assets'); if(a&&!isNaN(parseFloat(a))) ta.value=parseFloat(a); }
   updateTotal();
 };
 function qty(i){ let v=parseFloat(document.getElementById('qty'+i).value); return isNaN(v)||v<0?0:v; }
+function totalAssets(){ let v=parseFloat(document.getElementById('totalAsset').value); return isNaN(v)||v<0?0:v; }
 function calc(i){
   let e=DATA[i], q=qty(i), price=e.price||0;
   let divmv=document.getElementById('mv'+i), divp=document.getElementById('pnl'+i), divpp=document.getElementById('pnpct'+i);
@@ -151,6 +163,7 @@ function updateTotal(){
   document.getElementById('tpct').className=(tpct>=0?'pos':'neg');
 }
 for(let i=0;i<DATA.length;i++){ document.getElementById('qty'+i).addEventListener('input',function(){ let s=localStorage.getItem('hold_qty')||'{}'; try{s=JSON.parse(s)}catch(e){s={}} s[DATA[i].code]=parseFloat(this.value)||0; localStorage.setItem('hold_qty',JSON.stringify(s)); calc(i); updateTotal(); }); }
+(function(){ var ta2=document.getElementById('totalAsset'); if(ta2) ta2.addEventListener('input',function(){ var v=parseFloat(this.value); if(!isNaN(v)&&v>=0) localStorage.setItem('hold_assets',this.value); }); })();
 function fmt(x){ return isFinite(x)?Number(x).toFixed(2):'-'; }
 function money(x){ return isFinite(x)?Number(x).toLocaleString(undefined,{maximumFractionDigits:0}):'-'; }
 function genAdvice(){
@@ -200,12 +213,17 @@ function genAdvice(){
   });
 
   let recoRows='';
+  let TAset = totalAssets() > 0;
+  let TA = TAset ? totalAssets() : 0;
   if(RECO && RECO.length){
     RECO.forEach(function(r,k){
       let price=r.price||0;
-      let amt = k<2 ? 100000 : 50000;  // 参考金额: 前2名10万, 后3名5万
+      // 基于总资产分配: 前2名各8%, 中2名各5%, 第5名3%(合计约24%); 未填总资产则退回固定10万/5万
+      let ratio = TAset ? (k<2?0.08:(k<4?0.05:0.03)) : 0;
+      let amt = TAset ? Math.round(TA*ratio/100)*100 : (k<2?100000:50000);
+      let note = TAset ? ('总资产'+money(TA)+'的'+Math.round(ratio*100)+'%') : '参考金额';
       let shares = price>0 ? Math.round(amt/price/100)*100 : 0;
-      recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元）作为加配/换筹标的。</div>';
+      recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元 · '+note+'）作为加配/换筹标的。</div>';
     });
   }
 
