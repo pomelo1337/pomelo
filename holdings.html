@@ -122,6 +122,8 @@ button.adv:hover{background:#6d28d9}
 <div class="advout" id="advout"></div>
 <script>
 const DATA=[{"code": "159558", "name": "半导体设备ETF·易方达", "cost": 1.155, "price": 1.159, "pct": -3.09, "stage": "空头排列", "risk": 37.6, "ma20": 1.1177499999999998, "ma60": 1.1551666666666667, "buylow": 0.9129599999999999, "buyhigh": 0.951, "sella": 1.1177499999999998, "res": 1.1551666666666667, "target": 1.29677, "stop": 0.9034499999999999, "rr": 0.5391117198199955}, {"code": "588110", "name": "科创成长ETF·广发", "cost": 0.536, "price": 0.614, "pct": -1.44, "stage": "空头排列", "risk": 39.7, "ma20": 0.599, "ma60": 0.6920999999999999, "buylow": 0.49056, "buyhigh": 0.511, "sella": 0.599, "res": 0.6920999999999999, "target": 0.6920999999999999, "stop": 0.48545, "rr": 0.6075457020614543}];
+const RECO=[{"code": "512010", "name": "医药ETF易方达", "price": 0.403, "score": 74.6, "m60": 15.47277936962752, "m120": 5.22193211488251}, {"code": "512170", "name": "医疗ETF华宝", "price": 0.351, "score": 69.6, "m60": 9.006211180124213, "m120": -2.228412256267409}, {"code": "515950", "name": "医药50ETF富国", "price": 0.998, "score": 69.3, "m60": 14.449541284403677, "m120": 6.283280085197029}, {"code": "159992", "name": "创新药ETF银华", "price": 0.922, "score": 68.5, "m60": 17.602040816326525, "m120": 10.287081339712923}, {"code": "512690", "name": "酒ETF鹏华", "price": 0.441, "score": 67.5, "m60": -2.2172949002217335, "m120": -20.397111913357403}];
+const SLEEP1=false;
 window.onload = function() {
   let s=null; try{s=JSON.parse(localStorage.getItem('hold_qty')||'{}')}catch(e){s={}}
   for(let i=0;i<DATA.length;i++){ let el=document.getElementById('qty'+i); if(s[DATA[i].code]!==undefined) el.value=s[DATA[i].code]; calc(i); }
@@ -153,39 +155,65 @@ function fmt(x){ return isFinite(x)?Number(x).toFixed(3):'-'; }
 function money(x){ return isFinite(x)?Number(x).toLocaleString(undefined,{maximumFractionDigits:0}):'-'; }
 function genAdvice(){
   let bm=document.getElementById('advout'); bm.classList.add('show');
-  let html='<h3>📋 操作建议</h3>';
+  let html='<h3>📋 操作建议 · 分步执行</h3>';
+
+  // ============ 第一步：卖出评估 (该抛多少) ============
+  let sell_html='', sellTotal=0, sellHas=false;
   DATA.forEach(function(e,i){
     let q=qty(i);
-    if(q<=0){ html+='<div class="wa">· <b>'+e.name+'</b>：未输入持仓数量，跳过。</div>'; return; }
+    if(q<=0){ sell_html+='<div class="wa">· <b>'+e.name+'</b> 未输入持仓数量，跳过。</div>'; return; }
     let price=e.price||0, cost=e.cost, buyhigh=e.buyhigh||0, buylow=e.buylow||0, sella=e.sella||0, stop=e.stop||0, target=e.target||0;
     let stage=String(e.stage||''), mv=q*price, costv=q*cost, pnl=mv-costv, pct=costv>0?pnl/costv*100:0;
-    html+='<div style="margin-top:12px"><b style="font-size:15px">'+e.name+'</b> <span style="font-size:12px;color:#888">现价'+fmt(price)+' · 浮盈'+pct.toFixed(1)+'%</span></div>';
-    let adv=[];
-    let action=null;
+
+    // --- 卖出分支 (优先级: 止损 > 卖区 > 目标位止盈) ---
+    let sold=null;
     if(stop>0 && price<=stop){
-      action='清仓';
-      adv.push('<div class="op se">🚨 <b>已跌破止损线 '+fmt(stop)+'</b>，建议<b>清仓止损</b>：卖光 '+money(q)+' 份（约 '+money(mv)+' 元），保住剩余本金。</div>');
+      sold='清仓止损';
+      let amt=q*price; sellTotal+=amt; sellHas=true;
+      sell_html+='<div class="op se">🚨 <b>'+e.name+'</b> 现价 '+fmt(price)+' 已<b>跌破止损线 '+fmt(stop)+'</b>。<br>　<b>卖：全部 '+money(q)+' 份</b>（约 '+money(amt)+' 元），坚决离场保本。</div>';
+    } else if(sella>0 && price>=sella){
+      sold='减仓'; let ratio=0.6, sell=Math.round(q*ratio), amt=sell*price; sellTotal+=amt; sellHas=true;
+      sell_html+='<div class="op se">🛑 <b>'+e.name+'</b> 现价 '+fmt(price)+' 触及<b>卖区 '+fmt(sella)+'</b>（'+stage+'），建议落袋。<br>　<b>卖：'+Math.round(ratio*100)+'% 即 '+money(sell)+' 份</b>（约 '+money(amt)+' 元）。</div>';
+    } else if(target>0 && price>=target){
+      sold='止盈'; let ratio=0.3, sell=Math.round(q*ratio), amt=sell*price; sellTotal+=amt; sellHas=true;
+      sell_html+='<div class="op se">💰 <b>'+e.name+'</b> 已达<b>目标位 '+fmt(target)+'</b>，建议部分止盈。<br>　<b>卖：'+Math.round(ratio*100)+'% 即 '+money(sell)+' 份</b>（约 '+money(amt)+' 元），先锁一批利润。</div>';
     }
-    else if(sella>0 && price>=sella){
-      action='减仓'; let ratio=0.6, sell=q*ratio;
-      adv.push('<div class="op se">🛑 现价触及<b>卖区 '+fmt(sella)+'</b>，建议<b>减仓 '+Math.round(ratio*100)+'%</b>：卖出 <b>'+money(sell)+' 份</b>（约 '+money(sell*price)+' 元）落袋为安。</div>');
+    if(!sold){
+      let note = stage.indexOf('空头')>=0 ? '空头排列' : '多头排列';
+      sell_html+='<div class="wa">🤔 <b>'+e.name+'</b>（'+note+'）当前未触发卖点，<b>暂无卖出动作</b>。</div>';
     }
-    else if(target>0 && price>=target){
-      action='部分止盈'; let ratio=0.3, sell=q*ratio;
-      adv.push('<div class="op se">💰 已到<b>目标位 '+fmt(target)+'</b>，可<b>部分止盈 '+Math.round(ratio*100)+'%</b>：卖出 <b>'+money(sell)+' 份</b>（'+money(sell*price)+' 元）锁定利润。</div>');
-    }
-    else if(buyhigh>0 && price>=buylow && price<=buyhigh){
-      action='低吸';
-      let add=Math.max(50, Math.round(mv*0.15/price/100)*100);
-      adv.push('<div class="op bu">🎯 现价进入<b>买入区 '+fmt(buylow)+'~'+fmt(buyhigh)+'</b>，机会区可<b>低吸加仓</b>：买入 <b>'+money(add)+' 份</b>（约 '+money(add*price)+' 元）。</div>');
-    }
-    if(!action){
-      let note = stage.indexOf('空头')>=0 ? '当前空头排列' : '当前多头排列';
-      adv.push('<div class="wa">🤔 <b>'+note+'</b>，现价未触发买/卖点，<b>暂观望</b>。回踩买区 '+fmt(buylow)+'~'+fmt(buyhigh)+' 可低吸，反弹卖区 '+fmt(sella)+' 可减仓。</div>');
-    }
-    html+=adv.join('');
   });
-  html+='<div style="margin-top:14px;border-top:1px dashed #d6c9f0;padding-top:10px;font-size:13px;color:#6b7280">⚠️ 以上为该仓位基于量化点位的自动建议。实盘请结合资金、风险承受力与流动性二次确认。硬止损为纪律执行线，破位坚决执行。</div>';
+  if(!sellHas){ sell_html+='<div class="wa">✅ 当前均<strong>未触发卖出信号</strong>，无强制减仓/止损需求。</div>'; } else {
+    sell_html+='<div class="wa">　↳ <b>卖出合计可回笼约 '+money(sellTotal)+' 元</b>，可用于再配置（见第二步）。</div>';
+  }
+  html+='<div style="margin:10px 0 4px;font-weight:700;color:#9a3412">【第一步 · 该抛多少】卖出评估</div>'+sell_html;
+
+  // ============ 第二步：买入推荐 (推荐买什么/买多少) ============
+  let low_html='';
+  DATA.forEach(function(e,i){
+    let q=qty(i); if(q<=0)return;
+    let price=e.price||0, buyhigh=e.buyhigh||0, buylow=e.buylow||0, mv=q*price;
+    if(buyhigh>0 && price>=buylow && price<=buyhigh){
+      let add=Math.max(50, Math.round(mv*0.15/price/100)*100);
+      low_html+='<div class="op bu">🎯 <b>'+e.name+'</b> 现价 '+fmt(price)+' 恰在买入区 '+fmt(buylow)+'~'+fmt(buyhigh)+'。<br>　<b>买：低吸 '+money(add)+' 份</b>（约 '+money(add*price)+' 元）摊低成本。</div>';
+    }
+  });
+
+  let recoRows='';
+  if(RECO && RECO.length){
+    RECO.forEach(function(r,k){
+      let price=r.price||0;
+      let amt = k<2 ? 100000 : 50000;  // 参考金额: 前2名10万, 后3名5万
+      let shares = price>0 ? Math.round(amt/price/100)*100 : 0;
+      recoRows+='<div class="op bu" style="width:100%">🔺 <b>'+r.name+'</b>（'+r.code+'，评分'+r.score+'）多头强势。<br>　<b>买：'+money(shares)+' 份</b>（约 '+money(amt)+' 元）作为加配/换筹标的。</div>';
+    });
+  }
+
+  let buy_html = (low_html? '<div style="margin:8px 0;color:#444">① 持仓低吸机会：</div>'+low_html : '');
+  buy_html += '<div style="margin:8px 0;color:#444">② 推荐关注（多头强势，可作新增资金或卖出换筹目标，按排行榜评分优先）：</div>' + (recoRows||'<div class="wa">暂无满足条件的推荐。</div>');
+  html+='<div style="margin:14px 0 4px;font-weight:700;color:#065f46">【第二步 · 买什么/买多少】买入推荐</div>'+buy_html;
+
+  html+='<div style="margin-top:14px;border-top:1px dashed #d6c9f0;padding-top:10px;font-size:13px;color:#6b7280">⚠️ 以上基于量化点位自动生成，供参考。实盘请结合资金、风险承受力与流动性二次确认；硬止损为纪律执行线，破位坚决执行。卖出后资金可优先投向第二步中评分更高的标的。</div>';
   bm.innerHTML=html;
 }
 </script>
